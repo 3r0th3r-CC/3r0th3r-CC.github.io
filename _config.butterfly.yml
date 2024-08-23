@@ -192,7 +192,7 @@ related_post:
 # false: disable pagination
 post_pagination: 1
 
-# Displays outdated notice for a post (文章過期提醒)
+# Displays outdated notice for a post
 noticeOutdate:
   enable: false
   style: flat # style: simple/flat
@@ -210,7 +210,7 @@ footer:
   custom_text:
   copyright: true # Copyright of theme and framework
 
-# aside (側邊欄)
+# aside
 # --------------------------------------
 
 aside:
