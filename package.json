@@ -9,7 +9,7 @@
     "server": "hexo server"
   },
   "hexo": {
-    "version": ""
+    "version": "7.3.0"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
