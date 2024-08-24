@@ -21,7 +21,7 @@ menu:
 # Code Blocks
 # --------------------------------------
 
-highlight_theme: light #  darker / pale night / light / ocean / mac / mac light / false
+highlight_theme: darker #  darker / pale night / light / ocean / mac / mac light / false
 highlight_copy: true # copy button
 highlight_lang: true # show the code language
 highlight_shrink: false # true: shrink the code blocks / false: expand the code blocks | none: expand code blocks and hide the button
@@ -35,16 +35,16 @@ social:
   # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
   # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
 
-# Image (圖片設置)
+# Image
 # --------------------------------------
 
-# Favicon（網站圖標）
+# Favicon
 favicon: /img/favicon.png
 
-# Avatar (頭像)
+# Avatar
 avatar:
-  img: https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png
-  effect: false
+  img: 
+  effect: true
 
 # Disable all banner image
 disable_top_img: false
@@ -77,7 +77,7 @@ category_img:
 category_per_img:
 
 cover:
-  # display the cover or not (是否顯示文章封面)
+  # display the cover or not
   index_enable: true
   aside_enable: true
   archives_enable: true
@@ -101,17 +101,17 @@ error_404:
 
 post_meta:
   page: # Home Page
-    date_type: created # created or updated or both 主頁文章日期是創建日或者更新日或都顯示
-    date_format: date # date/relative 顯示日期還是相對日期
-    categories: true # true or false 主頁是否顯示分類
-    tags: false # true or false 主頁是否顯示標籤
-    label: true # true or false 顯示描述性文字
+    date_type: created # created or updated or both
+    date_format: date # date/relative
+    categories: true # true or false
+    tags: false # true or false
+    label: true # true or false
   post:
-    date_type: both # created or updated or both 文章頁日期是創建日或者更新日或都顯示
-    date_format: date # date/relative 顯示日期還是相對日期
-    categories: true # true or false 文章頁是否顯示分類
-    tags: true # true or false 文章頁是否顯示標籤
-    label: true # true or false 顯示描述性文字
+    date_type: both # created or updated or both
+    date_format: date # date/relative
+    categories: true # true or false
+    tags: true # true or false
+    label: true # true or false
 
 # Display the article introduction on homepage
 # 1: description
@@ -143,7 +143,7 @@ copy:
 # Post
 # --------------------------------------
 
-# toc (目錄)
+# toc
 toc:
   post: true
   page: false
@@ -270,13 +270,12 @@ aside:
     order: -1 # Sort of order. 1, asc for ascending; -1, desc for descending
 
 # busuanzi count for PV / UV in site
-# 訪問人數
 busuanzi:
   site_uv: true
   site_pv: true
   page_pv: true
 
-# Time difference between publish date and now (網頁運行時間)
+# Time difference between publish date and now
 # Formal: Month/Day/Year Time or Year/Month/Day Time
 runtimeshow:
   enable: false
@@ -476,7 +475,7 @@ facebook_comments:
   user_id: # optional
   pageSize: 10 # The number of comments to show
   order_by: social # social/time/reverse_time
-  lang: zh_TW # Language en_US/zh_CN/zh_TW and so on
+  lang: en_US # Language en_US/zh_CN/zh_TW and so on
 
 # Twikoo
 # https://github.com/imaegoo/twikoo
@@ -551,7 +550,7 @@ crisp:
 messenger:
   enable: false
   pageID:
-  lang: zh_TW # Language en_US/zh_CN/zh_TW and so on
+  lang: en_US # Language en_US/zh_CN/zh_TW and so on
 
 # Analysis
 # --------------------------------------
@@ -575,7 +574,7 @@ microsoft_clarity:
 # Advertisement
 # --------------------------------------
 
-# Google Adsense (谷歌廣告)
+# Google Adsense
 google_adsense:
   enable: false
   auto_ads: true
@@ -583,7 +582,7 @@ google_adsense:
   client:
   enable_page_level_ads: true
 
-# Insert ads manually (手動插入廣告)
+# Insert ads manually
 # ad:
 #   index:
 #   aside:
@@ -678,7 +677,7 @@ canvas_ribbon:
   click_to_change: false
   mobile: false
 
-# Fluttering Ribbon (動態彩帶)
+# Fluttering Ribbon
 canvas_fluttering_ribbon:
   enable: false
   mobile: false
@@ -715,11 +714,11 @@ clickShowText:
   random: false
   mobile: false
 
-# Default display mode (網站默認的顯示模式)
-# light (default) / dark
-display_mode: light
+# Default display mode
+# light / dark (default)
+display_mode: dark
 
-# Beautify (美化頁面顯示)
+# Beautify
 beautify:
   enable: false
   field: post # site/post
@@ -727,7 +726,7 @@ beautify:
   title-prefix-icon-color: # '#F47466'
 
 # Global font settings
-# Don't modify the following settings unless you know how they work (非必要不要修改)
+# Don't modify the following settings unless you know how they work
 font:
   global-font-size:
   code-font-size:
@@ -797,14 +796,14 @@ fancybox: true
 # Tag Plugins settings (標籤外掛)
 # --------------------------------------
 
-# series (系列文章)
+# series
 series:
   enable: true
   orderBy: 'title' # Order by title or date
   order: 1 # Sort of order. 1, asc for ascending; -1, desc for descending
   number: true
 
-# abcjs (樂譜渲染)
+# abcjs
 # See https://github.com/paulrosen/abcjs
 abcjs:
   enable: false
