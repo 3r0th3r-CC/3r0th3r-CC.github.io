@@ -1,6 +1,6 @@
 ---
 title: Digital Dragon CTF 2024
-top_image: /assets/images/posts/22e5f50385c07992ac2d33b96179fde7.png
+top_img: /assets/images/posts/22e5f50385c07992ac2d33b96179fde7.png
 ---
 
 # Forensics
