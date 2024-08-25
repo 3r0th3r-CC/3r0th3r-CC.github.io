@@ -1,6 +1,166 @@
 ---
-title: DDC
+title: Digital Dragon CTF
 ---
+
+# Forensics
+
+## Simple File
+
+Sau khi phân tích thì, cuối cùng nhất là sử dụng xxd để xem bên trong chứa cái gì nhé.
+
+Sử dụng `xxd` để xem.
+
+![image](/assets/images/DDC/Tu-ket/for/for1.png)
+
+Dựa vào thông tin có được thì tìm kiếm GG `Flatedecode pdf`, dưới đây là đoạn code được sử dụng.
+
+```
+#Credit: https://gist.github.com/averagesecurityguy/ba8d9ed3c59c1deffbd1390dafa5a3c2
+import re
+import zlib
+
+pdf = open("some_doc.pdf", "rb").read()
+stream = re.compile(rb'.*?FlateDecode.*?stream(.*?)endstream', re.S)
+
+for s in stream.findall(pdf):
+    s = s.strip(b'\r\n')
+    try:
+        print(zlib.decompress(s))
+        print("")
+    except:
+        pass
+```
+
+Chạy file python thì xuất ra rất nhiều dòng lạ hoắc nhỉ :))
+
+Nó là các đoạn hex thôi, lướt đọc thì sẽ 1 đoạn rất lạ, hãy thử decode nó xem
+
+![image](/assets/images/DDC/Tu-ket/for/for2.png)
+
+Trong đây tui sử dụng [Cyber Chef](https://gchq.github.io/CyberChef/)
+
+![image](/assets/images/DDC/Tu-ket/for/for3.png)
+
+## Lạc Long Quân’s Mystery
+
+SỬ dụng `Volatility3`
+
+```
+python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.pslist.PsList
+```
+
+Thấy `MRCv120.exe` chứ hãy thử, dump ra xem nó là gì đi, tôi tò mò lắm rồi
+
+![image](/assets/images/DDC/Tu-ket/for/mem1.png)
+
+```
+python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.filescan.FileScan | grep -i mrcv120
+0x6737910  100.0\Users\ddcmystery\Downloads\MRCv120.exe	216
+0x3b14c270	\Users\ddcmystery\Downloads\MRCv120.exe	216
+0x3b14cf20	\Users\ddcmystery\Downloads\MRCv120.exe	216
+```
+
+Để ý, ta sẽ dump bằng `--physaddr`
+
+> `addr` của `MRCv120.exe` là `0x6737910`
+
+![image](/assets/images/DDC/Tu-ket/for/mem2.png)
+
+```
+python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw -o rar/ windows.dumpfiles.DumpFiles --physaddr 0x6737910
+```
+
+Với `-o` là đầu ra của các file đó
+
+Tiến hành đổi tên `file...MRCv120.exe.dat` thành MRVc120.exe
+
+```
+cp file.0xfa80036e8270.0xfa80036520c0.DataSectionObject.MRCv120.exe.dat MRCv120.exe && rm -f file.*
+```
+
+Sử dụng `md5` của file để tìm trên [VirusTotal](https://www.virustotal.com/gui/home/upload)
+
+```
+md5sum MRCv120.exe
+ec0c00b0a133a2ac4be9eca39fba8cee  MRCv120.exe
+```
+
+Dù nó là `Trojan` những sau 1 lúc lục lọi thì vẫn không thấy gì nên .-.
+
+Ta sử dụng `filescan` như sau để tiếp tục phân tích
+
+```
+python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.filescan.FileScan | grep -i ddcmystery
+```
+
+> `ddcmystery` là username
+
+`StickyNotes.snt` là nơi mà ứng dụng `Sticky Notes` lưu trữ các ghi chú mà người dùng tạo ra
+
+![image](/assets/images/DDC/Tu-ket/for/mem3.png)
+
+> Tiến hành `dump` như cũ
+
+```
+python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw -o rar windows.dumpfiles --physaddr 0x3d7f2a10
+
+cp file.0x3d7f2a10.0xfa80035f28b0.DataSectionObject.StickyNotes.snt.dat Stickynots.snt && rm -f file.*
+```
+
+Tôi đã tìm đc thứ thú vị ở đây rồi
+
+![image](/assets/images/DDC/Tu-ket/for/mem4.png)
+
+Sử dụng `Tor Browser`
+
+```
+http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpath/
+```
+
+Thấy có file tải về được, cũng tò mò :))
+
+> `.enc` là bị mã hóa rồi nha, phải có passwd mới được
+
+![image](/assets/images/DDC/Tu-ket/for/mem5.png)
+
+Vào `view-source` xem có gì khai thác được không, yeh ban đầu tôi nhìn sơ qua đã bỏ lỡ
+
+![image](/assets/images/DDC/Tu-ket/for/mem6.png)
+
+```
+http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpath/data/flag.txt`
+```
+
+Done :b
+
+# Boot2Root & Net
+
+2 challs này cơ bản là giống nhau vì đề có lổ hổng ... (chắc vậy :v)
+
+Việc của ta là `Extract` file `.ova`
+
+> Vì file `.ova` là dạng nén bao gồm file mô tả `OVF`, file đĩa thường có định dạng `.vmdk`, file `.mf` để đảm bảo tính toàn vẹn
+> Trong đó `.vmdk` là 1 tệp chứa các đĩa (tui đã sử dụng chỗ này để grep flag :b -> do không bị mã hóa nên khá ez)
+
+Sau khi `Extract` vào trong tệp đó sẽ thấy các tệp đã nói trên, tiếp theo đổi đuôi `.vmdk` -> `.zip` và `Extract` tiếp thôi
+
+## BTR-3
+
+![image](/assets/images/DDC/Tu-ket/for/btr1.png)
+
+## Shipped & docked
+
+![image](/assets/images/DDC/Tu-ket/for/net1.png)
+
+# Phissing
+
+Đưa `URL` lên VT để check
+
+![image](/assets/images/DDC/Tu-ket/for/phissing1.png)
+
+Sau đó sẽ thấy địa chỉ IP, ping tới, flag sẽ nằm ở phần mail :b (không rõ nhưng nó sẽ như vậy)
+
+> Chúc may mắn :)))
 
 # Reverse Engineering
 
