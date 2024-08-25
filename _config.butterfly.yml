@@ -2,13 +2,13 @@
 # --------------------------------------
 
 nav:
-  logo: # image
+  logo: /assets/images/logo/Logo.png # image
   display_title: true
-  fixed: false # fixed navigation bar
+  fixed: true # fixed navigation bar
 
 # Menu
 menu:
-  # Home: / || fas fa-home
+  Home: / || fas fa-home
   # Archives: /archives/ || fas fa-archive
   Tags: /tags/ || fas fa-tags
   Categories: /categories/ || fas fa-folder-open
@@ -21,7 +21,7 @@ menu:
 # Code Blocks
 # --------------------------------------
 
-highlight_theme: darker #  darker / pale night / light / ocean / mac / mac light / false
+highlight_theme: pale night #  darker / pale night / light / ocean / mac / mac light / false
 highlight_copy: true # copy button
 highlight_lang: true # show the code language
 highlight_shrink: false # true: shrink the code blocks / false: expand the code blocks | none: expand code blocks and hide the button
@@ -32,8 +32,9 @@ code_word_wrap: false
 # formal:
 #   icon: link || the description || color
 social:
-  # fab fa-github: https://github.com/3r0th3r-CC || Github || '#24292e'
-  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
+  fab fa-github: https://github.com/3r0th3r-CC || Github || '#24292e'
+  fa-solid fa-font-awesome: https://ctftime.org/team/273127 || CTFTime || '#e3000b'
+  fas fa-envelope: mailto:2sob.3r0th3rcc@gmail.com || Email || '#4a7dbe'
 
 # Image
 # --------------------------------------
@@ -53,14 +54,14 @@ disable_top_img: false
 index_img: /assets/images/background/bg_2.png
 
 # If the banner of page not setting, it will show the top_img
-default_top_img:
+default_top_img: /assets/images/background/bg_4.png
 
 # The banner image of archive page
 archive_img: /assets/images/background/bg_3.png
 
 # If the banner of tag page not setting, it will show the top_img
 # note: tag page, not tags page (top_img)
-tag_img:
+tag_img: /assets/images/background/bg_4.png
 
 # The banner image of tag page
 # format:
@@ -68,8 +69,8 @@ tag_img:
 tag_per_img:
 
 # If the banner of category page not setting, it will show the top_img
-# note: category page, not categories page (子分類頁面的 top_img)
-category_img:
+# note: category page, not categories page
+category_img: /assets/images/background/bg_4.png
 
 # The banner image of category page
 # format:
@@ -86,18 +87,18 @@ cover:
   position: both
   # When cover is not set, the default cover is displayed
   default_cover:
-    # - https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
+    - /assets/images/background/bg_4.png
 
 # Replace Broken Images
 error_img:
   flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  post_page: /assets/images/web/404.gif
 
 # A simple 404 page
 error_404:
-  enable: false
-  subtitle: 'Page Not Found'
-  background: https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png
+  enable: true
+  subtitle: "Oops! Even Elaina Can't Find This Page on Her Journey :("
+  background: /assets/images/web/404_1.gif
 
 post_meta:
   page: # Home Page
@@ -127,18 +128,18 @@ anchor:
   # when you scroll, the URL will update according to header id.
   auto_update: false
   # Click the headline to scroll and update the anchor
-  click_to_scroll: false
+  click_to_scroll: true
 
-# figcaption (圖片描述文字)
+# figcaption
 photofigcaption: false
 
 # copy settings
-# copyright: Add the copyright information after copied content (複製的內容後面加上版權信息)
+# copyright: Add the copyright information after copied content
 copy:
   enable: true
   copyright:
     enable: false
-    limit_count: 50
+    limit_count:
 
 # Post
 # --------------------------------------
@@ -206,9 +207,9 @@ noticeOutdate:
 footer:
   owner:
     enable: true
-    since: 2020
+    since: 2024
   custom_text:
-  copyright: true # Copyright of theme and framework
+  copyright: false # Copyright of theme and framework
 
 # aside
 # --------------------------------------
@@ -225,14 +226,14 @@ aside:
     category: true
   card_author:
     enable: true
-    description:
+    description: We are <b>Brother CTF Crew</b>
     button:
       enable: true
       icon: fab fa-github
       text: Follow Us
       link: https://github.com/3r0th3r-CC
   card_announcement:
-    enable: true
+    enable: false
     content: This is 3r0th3r CC Blog
   card_recent_post:
     enable: true
@@ -306,7 +307,7 @@ translate:
   # The text of the button when the language is Traditional Chinese
   msgToSimplifiedChinese: '簡'
 
-# Read Mode (閲讀模式)
+# Read Mode
 readmode: true
 
 # dark mode
@@ -314,7 +315,7 @@ darkmode:
   enable: true
   # Toggle Button to switch dark/light mode
   button: true
-  # Switch dark/light mode automatically (自動切換 dark mode和 light mode)
+  # Switch dark/light mode automatically
   # autoChangeMode: 1  Following System Settings, if the system doesn't support dark mode, it will switch dark mode between 6 pm to 6 am
   # autoChangeMode: 2  Switch dark mode between 6 pm to 6 am
   # autoChangeMode: false
@@ -326,15 +327,15 @@ darkmode:
 # show scroll percent in scroll-to-top button
 rightside_scroll_percent: false
 
-# Don't modify the following settings unless you know how they work (非必要請不要修改 )
+# Don't modify the following settings unless you know how they work
 # Choose: readmode,translate,darkmode,hideAside,toc,chat,comment
-# Don't repeat 不要重複
+# Don't repeat
 rightside_item_order:
   enable: false
   hide: # readmode,translate,darkmode,hideAside
   show: # toc,chat,comment
 
-# Math (數學)
+# Math
 # --------------------------------------
 # About the per_page
 # if you set it to true, it will load mathjax/katex script in each page (true 表示每一頁都加載js)
@@ -588,7 +589,7 @@ google_adsense:
 #   aside:
 #   post:
 
-# Verification (站長驗證)
+# Verification
 # --------------------------------------
 
 site_verification:
@@ -597,15 +598,15 @@ site_verification:
   # - name: baidu-site-verification
   #   content: xxxxxxx
 
-# Beautify/Effect (美化/效果)
+# Beautify/Effect
 # --------------------------------------
 
 # Theme color for customize
 # Notice: color value must in double quotes like "#000" or may cause error!
 
-# theme_color:
-#   enable: true
-#   main: "#49B1F5"
+theme_color:
+  enable: true
+  main: "#1C1C1E"
 #   paginator: "#00c4b6"
 #   button_hover: "#FF7242"
 #   text_selection: "#00c4b6"
@@ -653,15 +654,15 @@ mask:
 # the position of bottom right button/default unit: px (右下角按鈕距離底部的距離/默認單位為px)
 rightside_bottom:
 
-# Enter transitions (開啓網頁進入效果)
+# Enter transitions
 enter_transitions: true
 
-# Typewriter Effect (打字效果)
+# Typewriter Effect
 # https://github.com/disjukr/activate-power-mode
 activate_power_mode:
   enable: false
-  colorful: true # open particle animation (冒光特效)
-  shake: true #  open shake (抖動特效)
+  colorful: true # open particle animation
+  shake: true #  open shake
   mobile: false
 
 # Background effects
@@ -703,7 +704,7 @@ click_heart:
   enable: false
   mobile: false
 
-# Mouse click effects: words (鼠標點擊效果: 文字)
+# Mouse click effects: words
 clickShowText:
   enable: false
   text:
@@ -738,31 +739,30 @@ blog_title_font:
   font_link:
   font-family:
 
-# The setting of divider icon (水平分隔線圖標設置)
+# The setting of divider icon
 hr_icon:
   enable: true
   icon: # the unicode value of Font Awesome icon, such as '\3423'
   icon-top:
 
-# the subtitle on homepage (主頁subtitle)
+# the subtitle on homepage
 subtitle:
-  enable: false
-  # Typewriter Effect (打字效果)
+  enable: true
+  # Typewriter Effect
   effect: true
-  # Customize typed.js (配置typed.js)
+  # Customize typed.js
   # https://github.com/mattboldt/typed.js/#customization
   typed_option:
-  # source 調用第三方服務
-  # source: false 關閉調用
-  # source: 1  調用一言網的一句話（簡體） https://hitokoto.cn/
-  # source: 2  調用一句網（簡體） https://yijuzhan.com/
-  # source: 3  調用今日詩詞（簡體） https://www.jinrishici.com/
-  # subtitle 會先顯示 source , 再顯示 sub 的內容
+    typeSpeed: 40
+    backSpeed: 50
+    backDelay: 1200
   source: false
-  # 如果關閉打字效果，subtitle 只會顯示 sub 的第一行文字
   sub:
+  - Blog of 3r0th3r CC
+  - CTF Writeups
+  - アニメ好き
 
-# Loading Animation (加載動畫)
+# Loading Animation
 preloader:
   enable: false
   # source

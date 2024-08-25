@@ -1,107 +1,75 @@
-# hexo-theme-butterfly
+# 3r0th3r CC Blog
 
-![master version](https://img.shields.io/github/package-json/v/jerryc127/hexo-theme-butterfly/master?color=%231ab1ad&label=master)
-![master version](https://img.shields.io/github/package-json/v/jerryc127/hexo-theme-butterfly/dev?label=dev)
-![https://img.shields.io/npm/v/hexo-theme-butterfly?color=%09%23bf00ff](https://img.shields.io/npm/v/hexo-theme-butterfly?color=%09%23bf00ff)
-![hexo version](https://img.shields.io/badge/hexo-5.3.0+-0e83c)
-![license](https://img.shields.io/github/license/jerryc127/hexo-theme-butterfly?color=FF5531)
+![readme](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/web/readme.png)
 
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/img/theme-butterfly-readme.png)
+:book: Theme Docs: [English](https://butterfly.js.org/en/posts/butterfly-docs-en-get-started/)
 
-📢 Demo: [Butterfly](https://butterfly.js.org/) || [CrazyWong](https://blog.crazywong.com/)
-
-📖 Docs: [English](https://butterfly.js.org/en/posts/butterfly-docs-en-get-started/) || [Chinese](https://butterfly.js.org/posts/21cfbf15/)
-
-Based on [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) theme.
-
-## 💻 Installation
+## :computer: Installation
 
 ### GIT
 
-> If you are in Mainland China, you can download in [Gitee](https://gitee.com/immyw/hexo-theme-butterfly.git)
-
-Stable branch [recommend]:
+**HTTPS**
 
 ```
-git clone -b master https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
+git clone -b master https://github.com/3r0th3r-CC/3r0th3r-cc.github.io.git
 ```
 
-Dev branch:
+or
+
+**SSH**
 
 ```
-git clone -b dev https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
+git clone -b master git@github.com:3r0th3r-CC/3r0th3r-cc.github.io.git
 ```
 
 ### NPM
 
-> It supports Hexo 5.0.0 or later
+After cloning the repo, `cd` into that repo and run the following command:
 
-In Hexo site root directory 
-
-```powershell
-npm i hexo-theme-butterfly
+```sh
+npm i hexo && sudo npm install hexo-cli -g
 ```
 
-## ⚙ Configuration
+## :writing_hand: Writing
 
- Set theme in the hexo work folder's root config file `_config.yml`: 
+First, let's create a new branch:
 
-> theme: butterfly
+```sh
+git checkout -b <new_branch_name>
+```
 
- If you don't have pug & stylus renderer, try this: 
+Now you can create a new post and write your stuff:
 
-> npm install hexo-renderer-pug hexo-renderer-stylus
+```sh
+hexo new <new_post_name>
+```
 
-## 🎉 Features
+> The new post will be located at `/source/_posts`
 
-- [x] Card UI Design
-- [X] Support sub-menu
-- [x] Two-column layout
-- [x] Responsive Web Design
-- [x] Dark Mode
-- [x] Pjax
-- [x] Read Mode
-- [x] Conversion between Traditional and Simplified Chinese
-- [X] TOC catalog is available for both computers and mobile phones
-- [X] Built-in Syntax Highlighting Themes (darker/pale night/light/ocean/mac/mac light), also support customization
-- [X] Code Blocks (Display code language/close or expand Code Blocks/Copy Button/word wrap)
-- [X] Disable copy/Add a Copyright Notice to the Copied Text
-- [X] Search (Algolia Search/Local Search)
-- [x] Mathjax and Katex
-- [x] Built-in 404 page
-- [x] WordCount
-- [x] Related articles
-- [x] Displays outdated notice for a post
-- [x] Share (Sharejs/Addtoany)
-- [X] Comment (Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/artalk)
-- [x] Multiple Comment System Support
-- [x] Online Chats (Chatra/Tidio/Daovoice/Crisp/messenger)
-- [x] Web analytics
-- [x] Google AdSense
-- [x] Webmaster Verification
-- [x] Change website colour scheme
-- [x] Typewriter Effect: activate_power_mode
-- [x] Background effects (Canvas ribbon/canvas_ribbon_piao/canvas_nest)
-- [x] Mouse click effects (Fireworks/Heart/Text)
-- [x] Preloader/Loading Animation/pace.js
-- [x] Busuanzi visitor counter
-- [x] Medium Zoom/Fancybox
-- [x] Mermaid
-- [x] Justified Gallery
-- [x] Lazyload images
-- [x] Instantpage/Pangu/Snackbar notification toast/PWA......
+If you want to see how your post looks like on blog, just need to run this following command:
 
-## ✨ Contributors
+```sh
+hexo s
+```
 
-<a href="https://github.com/jerryc127/hexo-theme-butterfly/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=jerryc127/hexo-theme-butterfly" />
-</a>
+Then visit `http://localhost:4000` to view that post!
 
-## 📷 Screenshots
+## :newspaper: Publish
 
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/img/butterfly-readme-screenshots-1.jpg)
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/img/butterfly-readme-screenshots-2.jpg)
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/img/butterfly-readme-screenshots-3.jpg)
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN@m2/img/butterfly-readme-screenshots-4.jpg)
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/theme-butterfly-readme-homepage-1.png)
-![](https://cdn.jsdelivr.net/gh/jerryc127/CDN/img/theme-butterfly-readme-homepage-2.png)
+Run this command to add all changes and create commit
+
+```sh
+git add && git commit -m "<commit_name>"
+```
+
+Then push it to [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io)
+
+```sh
+git push
+```
+
+**This is an important part**
+
+On [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io), click **Pull Requests**
+
+Then ask the admin for more, I'm lazy :)

@@ -5,11 +5,11 @@
 # Site
 title: ~ 3r0th3r CC Blog ~
 subtitle: ''
-description: ''
-keywords:
+description: 'We are <b>Brother CTF Crew</b>'
+keywords: ctf, writeups, blog
 author: 3r0th3r CC
 language: en
-timezone: ''
+timezone: 'Asia/Ho_Chi_Minh'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
