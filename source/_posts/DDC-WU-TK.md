@@ -10,7 +10,7 @@ Sau khi phân tích thì, cuối cùng nhất là sử dụng xxd để xem bên
 
 Sử dụng `xxd` để xem.
 
-![image](/assets/images/DDC/Tu-ket/for/for1.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for1.png)
 
 Dựa vào thông tin có được thì tìm kiếm GG `Flatedecode pdf`, dưới đây là đoạn code được sử dụng.
 
@@ -35,11 +35,11 @@ Chạy file python thì xuất ra rất nhiều dòng lạ hoắc nhỉ :))
 
 Nó là các đoạn hex thôi, lướt đọc thì sẽ 1 đoạn rất lạ, hãy thử decode nó xem
 
-![image](/assets/images/DDC/Tu-ket/for/for2.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for2.png)
 
 Trong đây tui sử dụng [Cyber Chef](https://gchq.github.io/CyberChef/)
 
-![image](/assets/images/DDC/Tu-ket/for/for3.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for3.png)
 
 ## Lạc Long Quân’s Mystery
 
@@ -51,7 +51,7 @@ python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windo
 
 Thấy `MRCv120.exe` chứ hãy thử, dump ra xem nó là gì đi, tôi tò mò lắm rồi
 
-![image](/assets/images/DDC/Tu-ket/for/mem1.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem1.png)
 
 ```
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.filescan.FileScan | grep -i mrcv120
@@ -64,7 +64,7 @@ python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windo
 
 > `addr` của `MRCv120.exe` là `0x6737910`
 
-![image](/assets/images/DDC/Tu-ket/for/mem2.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem2.png)
 
 ```
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw -o rar/ windows.dumpfiles.DumpFiles --physaddr 0x6737910
@@ -97,7 +97,7 @@ python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windo
 
 `StickyNotes.snt` là nơi mà ứng dụng `Sticky Notes` lưu trữ các ghi chú mà người dùng tạo ra
 
-![image](/assets/images/DDC/Tu-ket/for/mem3.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem3.png)
 
 > Tiến hành `dump` như cũ
 
@@ -109,7 +109,7 @@ cp file.0x3d7f2a10.0xfa80035f28b0.DataSectionObject.StickyNotes.snt.dat Stickyno
 
 Tôi đã tìm đc thứ thú vị ở đây rồi
 
-![image](/assets/images/DDC/Tu-ket/for/mem4.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem4.png)
 
 Sử dụng `Tor Browser`
 
@@ -121,11 +121,11 @@ Thấy có file tải về được, cũng tò mò :))
 
 > `.enc` là bị mã hóa rồi nha, phải có passwd mới được
 
-![image](/assets/images/DDC/Tu-ket/for/mem5.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem5.png)
 
 Vào `view-source` xem có gì khai thác được không, yeh ban đầu tôi nhìn sơ qua đã bỏ lỡ
 
-![image](/assets/images/DDC/Tu-ket/for/mem6.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem6.png)
 
 ```
 http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpath/data/flag.txt`
@@ -146,17 +146,17 @@ Sau khi `Extract` vào trong tệp đó sẽ thấy các tệp đã nói trên, 
 
 ## BTR-3
 
-![image](/assets/images/DDC/Tu-ket/for/btr1.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/btr1.png)
 
 ## Shipped & docked
 
-![image](/assets/images/DDC/Tu-ket/for/net1.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/net1.png)
 
 # Phissing
 
 Đưa `URL` lên VT để check
 
-![image](/assets/images/DDC/Tu-ket/for/phissing1.png)
+![image](/assets/images/posts/DDC/Tu-Ket/Forensic/phissing1.png)
 
 Sau đó sẽ thấy địa chỉ IP, ping tới, flag sẽ nằm ở phần mail :b (không rõ nhưng nó sẽ như vậy)
 
