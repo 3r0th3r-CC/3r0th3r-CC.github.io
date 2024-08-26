@@ -32,7 +32,7 @@ npm i hexo && sudo npm install hexo-cli -g
 
 ## :writing_hand: Writing
 
-First, let's create a new branch:
+First, let's create a new branch **(Please do not write directly on the master branch)**:
 
 ```sh
 git checkout -b <new_branch_name>
@@ -45,6 +45,7 @@ hexo new <new_post_name>
 ```
 
 > The new post will be located at `/source/_posts`
+> You should save your images, videos or scripts at `/source/assets`. For example: `/source/assets/images/posts/testctf-writeup/a.png`
 
 If you want to see how your post looks like on blog, just need to run this following command:
 
@@ -59,17 +60,38 @@ Then visit `http://localhost:4000` to view that post!
 Run this command to add all changes and create commit
 
 ```sh
-git add && git commit -m "<commit_name>"
+git add -A && git commit -m "<commit_name>"
 ```
 
 Then push it to [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io)
 
 ```sh
+git push --set-upstream origin <your_branch_name>
+```
+
+or this if you pushed it before
+
+```sh
 git push
 ```
+
 
 **This is an important part**
 
 On [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io), click **Pull Requests**
 
-Then ask the admin for more, I'm lazy :)
+Then ask the **admin** for more, I'm lazy now :)
+
+## :recycle: Update
+
+Check out the **master** branch first:
+
+```sh
+git checkout master
+```
+
+Then `fetch` and `pull` all changes from the remote repository:
+
+```sh
+git fetch && git pull
+```
