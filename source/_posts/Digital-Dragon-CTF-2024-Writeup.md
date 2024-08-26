@@ -1,7 +1,8 @@
 ---
 title: Digital Dragon CTF 2024 Writeup
 description: "CTF Digital Dragons: The Cybersecurity Challenge 2024 là cuộc thi do Trường Đại học Công nghệ Thông tin & Truyền thông Việt - Hàn (VKU) tổ chức"
-cover: https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/thumb.png
+cover: >-
+  https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/thumb.png
 categories:
   - [CTF, Writeups]
 tags:
@@ -14,6 +15,8 @@ tags:
   - boot2root
   - network
 indexing: true
+comments: true
+date: 2024-08-26 03:25:00
 ---
 
 Hi, tụi mình là team **3r0th3r CC**. Đợt vừa rồi team mình đã đứng **hạng 17** vòng **Tứ Kết** của cuộc thi **Digital Dragon CTF** và cũng clear được hết tất cả challenge
@@ -76,66 +79,63 @@ Url: https://digitaldragonsctf-the-lost-diamond-of-hanoi.chals.io/
 
 ![the-lost-diamond-of-hanoi](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/the-lost-diamond-of-hanoi.png)
 
-Đề này đại loại bảo rằng mình phải tìm cái kho báu được giấu trong lòng ngôi đền bí ẩn gì đó khá rườm rà nên mình xem source luôn cho lẹ
+Đề này đại loại bảo rằng mình phải tìm cái kho báu được giấu trong lòng ngôi đền bí ẩn gì đó. Mà mình ngồi test sơ thì chẳng thu được gì nên mình xem source luôn để phân tích được sâu hơn
 
 ```js
 // File /static/script.js
-const searchInput = document.getElementById("searchInput");
-const searchResults = document.getElementById("searchResults");
-const description = document.getElementById("description");
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const description = document.getElementById('description');
 
-searchInput.addEventListener("input", async () => {
-  const searchTerm = searchInput.value.trim();
-  if (searchTerm === "") {
+searchInput.addEventListener('input', async () => {
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm === '') {
+        clearSearchResults();
+        return;
+    }
+
+    const response = await fetch(`/search?term=${encodeURIComponent(searchTerm)}`);
+    const data = await response.json();
+
     clearSearchResults();
-    return;
-  }
-
-  const response = await fetch(
-    `/search?term=${encodeURIComponent(searchTerm)}`
-  );
-  const data = await response.json();
-
-  clearSearchResults();
-  data.forEach((result) => {
-    const resultElement = document.createElement("div");
-    resultElement.textContent = result.hint_name;
-    resultElement.classList.add("hint-method");
-    resultElement.addEventListener("click", async () => {
-      const descriptionResponse = await fetch(
-        `/description?hint=${encodeURIComponent(result.hint_name)}`
-      );
-      const descriptionData = await descriptionResponse.json();
-      searchInput.value = "";
-      clearSearchResults();
-      description.innerHTML = `<strong>${result.hint_name}</strong>: ${descriptionData.description}`;
+    data.forEach(result => {
+        const resultElement = document.createElement('div');
+        resultElement.textContent = result.hint_name;
+        resultElement.classList.add('hint-method');
+        resultElement.addEventListener('click', async () => {
+            const descriptionResponse = await fetch(`/description?hint=${encodeURIComponent(result.hint_name)}`);
+            const descriptionData = await descriptionResponse.json();
+            searchInput.value = '';
+            clearSearchResults();
+            description.innerHTML = `<strong>${result.hint_name}</strong>: ${descriptionData.description}`;
+        });
+        searchResults.appendChild(resultElement);
     });
-    searchResults.appendChild(resultElement);
-  });
 });
 
 function clearSearchResults() {
-  searchResults.innerHTML = "";
-  description.innerHTML = "";
+    searchResults.innerHTML = '';
+    description.innerHTML = '';
 }
 
 function openTab(tabName) {
-  var tabContents = document.getElementsByClassName("tab-content");
-  for (var i = 0; i < tabContents.length; i++) {
-    tabContents[i].classList.remove("active");
-  }
-  var tabs = document.getElementsByClassName("tab");
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.remove("active");
-  }
-  document.getElementById(tabName).classList.add("active");
-  event.target.classList.add("active");
+    var tabContents = document.getElementsByClassName('tab-content');
+    for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+    }
+    var tabs = document.getElementsByClassName('tab');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
 }
+
 
 /* Remove /api/debug in production */
 ```
 
-Hồi đầu mình không để ý lắm nên cứ ngồi test ở endpoint `/search` xem có bị dính lỗi **SQL Injection** không, mãi sau nhìn xuống dưới mới biết là có `/api/debug` nằm ở dòng cuối .\_.
+Hồi đầu mình không để ý lắm nên cứ ngồi test ở endpoint `/search` xem có bị dính lỗi **SQL Injection** không, mãi sau nhìn xuống dưới mới biết là có `/api/debug` nằm ở dòng cuối ._.
 
 Lúc này mình thử gửi request `GET` để check và server trả về `405 METHOD NOT ALLOWED`. Vì vậy mình đã chuyển sang `POST` request xong lại nhận được `400 BAD REQUEST` :)
 
@@ -160,7 +160,6 @@ Nguyên lý là ta sẽ biến nó thành 1 mảng, trong đó sẽ có chứa c
 > **FLAG: flag{a42c3633fa1422d6356ecafc6849788e}**
 
 Link:
-
 - https://t3l3sc0p3.github.io/posts/knightctf-2024-writeup/#gain-access-2-440-pts
 - https://www.w3schools.com/js/js_json_arrays.asp
 
@@ -342,7 +341,7 @@ $telegramID = "12345678";   //PUT YOUR ID HERE!!!
 
 Sau đó từ tài khoản [GitHub](https://github.com/ddcScapeG0at24/), ta tìm được tài khoản [Twitter (X)](https://x.com/ddcScapeG0at24) rồi [LinkedIn](https://www.linkedin.com/in/ddcScapeG0at24/)
 
-Mọi thứ đều hướng tới tài khoản [LinkedIn](https://www.linkedin.com/in/ddcScapeG0at24/), tuy nhiên tới đây lại là hẻm cụt. Team mình đã dành ra gần 3 tiếng vô nghĩa chỉ để ngồi mò xem có thể moi được gì từ cái acc này hay không .\_\_.
+Mọi thứ đều hướng tới tài khoản [LinkedIn](https://www.linkedin.com/in/ddcScapeG0at24/), tuy nhiên tới đây lại là hẻm cụt. Team mình đã dành ra gần 3 tiếng vô nghĩa chỉ để ngồi mò xem có thể moi được gì từ cái acc này hay không .__.
 
 Xong bọn mình lại mò về [GitHub](https://github.com/ddcScapeG0at24/). Lúc này vài member trong team phát hiện ra email trong repo tại [commit này](https://github.com/ddcScapeG0at24/Phishing1/commit/915f4c5a37e714d88f23f0a89d5e7432080a2629)
 
