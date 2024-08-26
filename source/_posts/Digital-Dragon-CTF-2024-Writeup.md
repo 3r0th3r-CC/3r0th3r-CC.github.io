@@ -1,20 +1,178 @@
 ---
-title: Digital Dragon CTF 2024
+title: Digital Dragon CTF 2024 Writeup
+description: "CTF Digital Dragons: The Cybersecurity Challenge 2024 là cuộc thi do Trường Đại học Công nghệ Thông tin & Truyền thông Việt - Hàn (VKU) tổ chức"
+thumbnail: https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/thumb.png
+categories:
+- [CTF, Writeups]
+tags:
+- web
+- forensics
+- reverse
+- pwn
+- osint
+- phishing
+- boot2root
+- network
+indexing: true
 ---
+
+Hi, tụi mình là team **3r0th3r CC**. Đợt vừa rồi team mình đã đứng **hạng 17** vòng **Tứ Kết** của cuộc thi **Digital Dragon CTF** và cũng clear được hết tất cả challenge
+
+![17th](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/17th.png)
+
+Đây sẽ là bài writeup của vòng đó đồng thời cũng là bài debut của bọn mình <3
+
+# Web
+
+## Treasure of Hanoi
+
+Url: https://digitaldragonsctf-treasure-of-hanoi.chals.io
+
+![treasure-of-hanoi](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/host-ping-checker.png)
+
+Nhìn sơ qua, ta có thể thấy được đây chính là trang cho phép ping tới các host. Như mọi khi thì mình bật Burp Suite lên, intercept request rồi test thôi :3
+
+Sau khi ngồi mò tí thì mình nhận ra có vài ký tự đặc biệt không bị lọc như:
+
+```
+$\;.
+```
+
+Với kinh nghiệm có được từ các giải CTF trước, không quá khó để đoán ra đây là vuln **Command Injection**
+
+```shell
+;ls
+```
+
+![detect](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/detect.png)
+
+Nhiệm vụ của ta đơn giản chỉ là tìm xem file chứa flag nằm ở đâu rồi đọc nó thôi
+
+Tuy nhiên, vấn đề lúc này lại phát sinh, dấu cách bị lọc nên ta không thể thêm option `-al` vào lệnh `ls` được. Để giải quyết thì mình đã thêm `$IFS` thay cho dấu cách để bypass
+
+```shell
+;ls$IFS-al
+```
+
+![flag](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/flag.txt.png)
+
+Bây giờ, mình đã biết flag nằm trong file `.flag.txt`. Nhưng tới lúc đọc flag thì mình nhận ra lệnh `cat` cũng bị lọc mất =))
+
+Sau một hồi nghiên cứu, nói thẳng ra là search Google, mình đã tìm ra cách. Cụ thể là ta chỉ cần thêm `\` vào kế mỗi ký tự của lệnh là sẽ bypass được
+
+Payload cuối cùng:
+
+```shell
+;c\a\t$IFS.flag.txt
+```
+
+> **FLAG: flag{50c49f64befc0f84c827c7771c9ebdd5}**
+
+Link: https://viblo.asia/p/bypass-os-command-injection-XL6lA4rNZek
+
+## The Lost Diamond of Hanoi
+
+Url: https://digitaldragonsctf-the-lost-diamond-of-hanoi.chals.io/
+
+![the-lost-diamond-of-hanoi](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/the-lost-diamond-of-hanoi.png)
+
+Đề này đại loại bảo rằng mình phải tìm cái kho báu được giấu trong lòng ngôi đền bí ẩn gì đó khá rườm rà nên mình xem source luôn cho lẹ
+
+```js
+// File /static/script.js
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const description = document.getElementById('description');
+
+searchInput.addEventListener('input', async () => {
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm === '') {
+        clearSearchResults();
+        return;
+    }
+
+    const response = await fetch(`/search?term=${encodeURIComponent(searchTerm)}`);
+    const data = await response.json();
+
+    clearSearchResults();
+    data.forEach(result => {
+        const resultElement = document.createElement('div');
+        resultElement.textContent = result.hint_name;
+        resultElement.classList.add('hint-method');
+        resultElement.addEventListener('click', async () => {
+            const descriptionResponse = await fetch(`/description?hint=${encodeURIComponent(result.hint_name)}`);
+            const descriptionData = await descriptionResponse.json();
+            searchInput.value = '';
+            clearSearchResults();
+            description.innerHTML = `<strong>${result.hint_name}</strong>: ${descriptionData.description}`;
+        });
+        searchResults.appendChild(resultElement);
+    });
+});
+
+function clearSearchResults() {
+    searchResults.innerHTML = '';
+    description.innerHTML = '';
+}
+
+function openTab(tabName) {
+    var tabContents = document.getElementsByClassName('tab-content');
+    for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+    }
+    var tabs = document.getElementsByClassName('tab');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+
+/* Remove /api/debug in production */
+```
+
+Hồi đầu mình không để ý lắm nên cứ ngồi test ở endpoint `/search` xem có bị dính lỗi **SQL Injection** không, mãi sau nhìn xuống dưới mới biết là có `/api/debug` nằm ở dòng cuối ._.
+
+Lúc này mình thử gửi request `GET` để check và server trả về `405 METHOD NOT ALLOWED`. Vì vậy mình đã chuyển sang `POST` request xong lại nhận được `400 BAD REQUEST` :)
+
+Đọc lại file `script.js`, có thể thấy server sử dụng **json**, vì vậy nên ta cần phải đổi thành `Content-Type: application/json` mới được
+
+![admin](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/admin.png)
+
+Nhiệm vụ lúc này là làm sao để lên được `admin`, tuy nhiên thì mọi chuyện không hề đơn giản
+
+![error](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/error.png)
+
+Sau khi ~~nghiên cứu,~~ search Google, mình thấy dạng này khá giống vuln **NoSQL Injection** nên đã test vài payload nhưng không thành công
+
+Vào lúc gần như bất lực nhất thì mình lại chợt nhớ lại [1 challenge mà mình đã viết writeup trước đây](https://t3l3sc0p3.github.io/posts/knightctf-2024-writeup/#gain-access-2-440-pts)
+
+Nguyên lý là ta sẽ biến nó thành 1 mảng, trong đó sẽ có chứa cả value mà mình mong muốn và value hợp lệ, từ đó qua mặt hệ thống, và cách này thành công thật
+
+![flag](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Web/flag-json.png)
+
+![noice](https://i.imgur.com/jwYlN9G.gif)
+
+> **FLAG: flag{a42c3633fa1422d6356ecafc6849788e}**
+
+Link:
+- https://t3l3sc0p3.github.io/posts/knightctf-2024-writeup/#gain-access-2-440-pts
+- https://www.w3schools.com/js/js_json_arrays.asp
 
 # Forensics
 
 ## Simple File
 
-Sau khi phân tích thì, cuối cùng nhất là sử dụng xxd để xem bên trong chứa cái gì nhé.
+Sau khi tui phân tích thì, cuối cùng nhất là sử dụng `xxd` để xem bên trong chứa cái gì nhé
 
-Sử dụng `xxd` để xem.
+Sử dụng `xxd` để xem
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for1.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/for1.png)
 
-Dựa vào thông tin có được thì tìm kiếm GG `Flatedecode pdf`, dưới đây là đoạn code được sử dụng.
+Dựa vào thông tin có được thì tìm kiếm Google `Flatedecode pdf`, dưới đây là đoạn code được sử dụng
 
-```
+```python
 #Credit: https://gist.github.com/averagesecurityguy/ba8d9ed3c59c1deffbd1390dafa5a3c2
 import re
 import zlib
@@ -33,27 +191,27 @@ for s in stream.findall(pdf):
 
 Chạy file python thì xuất ra rất nhiều dòng lạ hoắc nhỉ :))
 
-Nó là các đoạn hex thôi, lướt đọc thì sẽ 1 đoạn rất lạ, hãy thử decode nó xem
+Thật ra nó là các đoạn hex thôi, lướt đọc thì sẽ 1 đoạn rất lạ, hãy thử decode nó xem
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for2.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/for2.png)
 
 Trong đây tui sử dụng [Cyber Chef](https://gchq.github.io/CyberChef/)
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/for3.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/for3.png)
 
 ## Lạc Long Quân’s Mystery
 
-SỬ dụng `Volatility3`
+Sử dụng `Volatility3`
 
-```
+```shell
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.pslist.PsList
 ```
 
-Thấy `MRCv120.exe` chứ hãy thử, dump ra xem nó là gì đi, tôi tò mò lắm rồi
+Thấy `MRCv120.exe` chứ? Hãy thử dump ra xem nó là gì đi chứ tui tò mò lắm rồi
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem1.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem1.png)
 
-```
+```shell
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.filescan.FileScan | grep -i mrcv120
 0x6737910  100.0\Users\ddcmystery\Downloads\MRCv120.exe	216
 0x3b14c270	\Users\ddcmystery\Downloads\MRCv120.exe	216
@@ -64,23 +222,23 @@ python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windo
 
 > `addr` của `MRCv120.exe` là `0x6737910`
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem2.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem2.png)
 
-```
+```shell
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw -o rar/ windows.dumpfiles.DumpFiles --physaddr 0x6737910
 ```
 
 Với `-o` là đầu ra của các file đó
 
-Tiến hành đổi tên `file...MRCv120.exe.dat` thành MRVc120.exe
+Tiến hành đổi tên `file...MRCv120.exe.dat` thành `MRVc120.exe`
 
-```
+```shell
 cp file.0xfa80036e8270.0xfa80036520c0.DataSectionObject.MRCv120.exe.dat MRCv120.exe && rm -f file.*
 ```
 
 Sử dụng `md5` của file để tìm trên [VirusTotal](https://www.virustotal.com/gui/home/upload)
 
-```
+```shell
 md5sum MRCv120.exe
 ec0c00b0a133a2ac4be9eca39fba8cee  MRCv120.exe
 ```
@@ -89,7 +247,7 @@ Dù nó là `Trojan` những sau 1 lúc lục lọi thì vẫn không thấy gì
 
 Ta sử dụng `filescan` như sau để tiếp tục phân tích
 
-```
+```shell
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windows.filescan.FileScan | grep -i ddcmystery
 ```
 
@@ -97,19 +255,19 @@ python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw windo
 
 `StickyNotes.snt` là nơi mà ứng dụng `Sticky Notes` lưu trữ các ghi chú mà người dùng tạo ra
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem3.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem3.png)
 
 > Tiến hành `dump` như cũ
 
-```
+```shell
 python ../../../Tools/Tools\ DF/volatility3/vol.py -f ddc_mystery\(1\).raw -o rar windows.dumpfiles --physaddr 0x3d7f2a10
 
 cp file.0x3d7f2a10.0xfa80035f28b0.DataSectionObject.StickyNotes.snt.dat Stickynots.snt && rm -f file.*
 ```
 
-Tôi đã tìm đc thứ thú vị ở đây rồi
+Tui đã tìm đc thứ thú vị ở đây rồi
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem4.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem4.png)
 
 Sử dụng `Tor Browser`
 
@@ -121,21 +279,21 @@ Thấy có file tải về được, cũng tò mò :))
 
 > `.enc` là bị mã hóa rồi nha, phải có passwd mới được
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem5.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem5.png)
 
 Vào `view-source` xem có gì khai thác được không, yeh ban đầu tôi nhìn sơ qua đã bỏ lỡ
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/mem6.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/mem6.png)
 
 ```
-http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpath/data/flag.txt`
+http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpath/data/flag.txt
 ```
 
 Done :b
 
 # Boot2Root & Net
 
-2 challs này cơ bản là giống nhau vì đề có lổ hổng ... (chắc vậy :v)
+2 challs này cơ bản là giống nhau vì đề có lỗ hổng... (chắc vậy idk :v)
 
 Việc của ta là `Extract` file `.ova`
 
@@ -146,21 +304,63 @@ Sau khi `Extract` vào trong tệp đó sẽ thấy các tệp đã nói trên, 
 
 ## BTR-3
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/btr1.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/btr1.png)
 
 ## Shipped & docked
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/net1.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/net1.png)
 
 # Phissing
 
-Đưa `URL` lên VT để check
+Đưa `url` lên [VirusTotal](https://www.virustotal.com/gui/home/upload) để check
 
-![image](/assets/images/posts/DDC/Tu-Ket/Forensic/phissing1.png)
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/phissing1.png)
 
-Sau đó sẽ thấy địa chỉ IP, ping tới, flag sẽ nằm ở phần mail :b (không rõ nhưng nó sẽ như vậy)
+Sau đó ta sẽ tìm thấy địa chỉ IP khá đáng ngờ, truy cập vào ta sẽ thấy thêm 1 file `onedrive.zip`
 
-> Chúc may mắn :)))
+Tải file đó xuống và giải nén ra, flag sẽ nằm ở file `mail.php` :b
+
+```php
+<?php
+
+
+$email = array("phish@digidragonsctf.com");  //PUT YOUR EMAIL HERE!!!
+$telegramTOKEN = "12345678:5ab7fbc37fe19710e6e764bdfb931969"; //PUT YOUR TELEGRAM TOKEN HERE!!! PS : Hex value is your flag
+$telegramID = "12345678";   //PUT YOUR ID HERE!!!
+
+
+?>
+```
+
+# OSINT
+
+Đầu tiên, challenge cho ta 1 cái username `ddcScapeG0at24`. Sử dụng tool [instantusername](https://instantusername.com) hoặc 1 số tool như `sherlock`, ta sẽ tìm được tài khoản [GitHub](https://github.com/ddcScapeG0at24/)
+
+Sau đó từ tài khoản [GitHub](https://github.com/ddcScapeG0at24/), ta tìm được tài khoản [Twitter (X)](https://x.com/ddcScapeG0at24) rồi [LinkedIn](https://www.linkedin.com/in/ddcScapeG0at24/)
+
+Mọi thứ đều hướng tới tài khoản [LinkedIn](https://www.linkedin.com/in/ddcScapeG0at24/), tuy nhiên tới đây lại là hẻm cụt. Team mình đã dành ra gần 3 tiếng vô nghĩa chỉ để ngồi mò xem có thể moi được gì từ cái acc này hay không .__.
+
+Xong bọn mình lại mò về [GitHub](https://github.com/ddcScapeG0at24/). Lúc này vài member trong team phát hiện ra email trong repo tại [commit này](https://github.com/ddcScapeG0at24/Phishing1/commit/915f4c5a37e714d88f23f0a89d5e7432080a2629)
+
+```
+ddcScapeG0at24@gmail.com
+```
+
+Nên tụi mình đã sử dụng tool [Epieos](https://epieos.com/) để trích xuất thông tin. Sau một lúc ngồi mò thì tụi mình tìm được [Calendar](https://calendar.google.com/calendar/u/0/embed?src=ddcScapeG0at24@gmail.com)
+
+Khi bấm sang `September 2024` để xem, tụi mình thấy 1 trang web và thông tin để đăng nhập
+
+```
+Server: https://digitaldragonsctf-ddc24scapeg0at.chals.io/
+User: ddc24
+Password: ddcScapeG0at24
+```
+
+Giờ thì chỉ cần đăng nhập vào lấy flag nữa thôi là xong
+
+![flag](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/OSINT/flag.png)
+
+> **FLAG: flag{a432a9312d26242a97984f23308e49b6}**
 
 # Reverse Engineering
 
@@ -177,7 +377,7 @@ Nó là một file `ELF 64-bit`
 
 Sau khi chạy file thì ta thấy nó hiện ra một giao diện GUI đăng nhập để nhập `Username` và `Password`
 
-![happiness_img](/assets/images/posts/DDC/Tu-Ket/Rev/e935aa1d809830f6a1143dc66cb7b9d9.png)
+![happiness_img](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Rev/e935aa1d809830f6a1143dc66cb7b9d9.png)
 
 Sau khi quăng vô [IDA](https://hex-rays.com/ida-pro/) và lướt sơ qua hàm `main` thì có thể thấy một hàm có tên là `on_button_clicked`.
 
@@ -221,7 +421,7 @@ v15 = g_type_check_instance_cast(password_entry, v14);
 password = (const char *)gtk_entry_get_text(v15);                       <-- password
 ```
 
-Tiếp tục lướt xuống dưới có thể thấy được nó đang kiểm tra xem `username` có phải là **"admin"** hay không. Nếu đúng thì nó sẽ sao chép chuỗi **admin** biến `admin_xored` và thực hiện một đoạn giải mã `encrypted_flag` (cờ bị mã hoá). Đoạn code mã hoá nhìn sơ qua thì cũng không có gì khó, chỉ đơn giản là sử dụng phép xor để xor chuỗi **admin** với **0xDE** sau đó lấy `encrypted_flag` xor với `admin_xored` ta sẽ được `decrypted_flag` và đây cũng chính là flag mà ta cần tìm.
+Tiếp tục lướt xuống dưới có thể thấy được nó đang kiểm tra xem `username` có phải là **"admin"** hay không. Nếu đúng thì nó sẽ sao chép chuỗi **admin** vào biến `admin_xored` và thực hiện một đoạn giải mã `encrypted_flag` (cờ bị mã hoá). Đoạn code mã hoá nhìn sơ qua thì cũng không có gì khó, chỉ đơn giản là sử dụng phép xor để xor chuỗi **admin** với **0xDE** sau đó lấy `encrypted_flag` xor với `admin_xored` ta sẽ được `decrypted_flag` và đây cũng chính là flag mà ta cần tìm.
 
 ```cpp
 if ( !strcmp(username, "admin") )                                                  <---------- username == "admin"
@@ -360,39 +560,41 @@ strcmp@plt (
 
 Bài này giao diện các kiểu cũng gần giống bài trên nhưng thay vì nhập `username` và `password` thì nó lại nhập `username` và `serial`
 
-![revved_img](/assets/images/posts/DDC/Tu-Ket/Rev/4afe6189aaea261d141cea6f438124f2.png)
+![revved_img](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Rev/4afe6189aaea261d141cea6f438124f2.png)
 
 Tiếp tục quăng vô `IDA` và xem hàm `on_button_clicked` ta thấy được rằng bây giờ `username` không phải **admin** nữa mà thay vào đó lại là (hắt cơ)**Hacker**
 
 ```cpp
 user_serial = strtoull(entered_serial, 0LL, 10);
-if ( *(_QWORD *)&len[4] == user_serial && !strcmp(username, "Hacker") )
-  {
-    *(_QWORD *)encrypted_string = 0x193536CC64F19FE1LL;
-    *(_QWORD *)&encrypted_string[8] = 0x80FAE52F53E26D7LL;
-    *(_QWORD *)&encrypted_string[16] = 0x53B98F7DFD87A294LL;
-    *(_QWORD *)&encrypted_string[24] = 0x3C7F91A0516AF712LL;
-    *(_QWORD *)&encrypted_string[30] = 0xC84F8FF01C3F3C7FLL;
-    encrypted_length = strlen(encrypted_string);
-    v50 = encrypted_length;
-    v19 = alloca(16 * ((encrypted_length + 16) / 0x10));
-    p_decrypted_string = (char (*)[])&dataa;
-    RC4((char *)entered_serial, encrypted_string, (unsigned __int8 *)&dataa);
-    v20 = gtk_label_get_type();
-    v21 = g_type_check_instance_cast(result_label, v20);
-    gtk_label_set_text(v21, p_decrypted_string);
-    v22 = gtk_label_get_type();
-    v23 = g_type_check_instance_cast(result_label, v22);
-    gtk_label_set_selectable(v23, 1LL);
-    v24 = gtk_label_get_type();
-    v25 = g_type_check_instance_cast(result_label, v24);
-    gtk_label_set_line_wrap(v25, 1LL);
-    v52 = 0LL;
-    v53 = 0x3FF0000000000000LL;
-    v54 = 0LL;
-    v55 = 0x3FF0000000000000LL;
-    gtk_widget_override_color(result_label, 0LL, &v52);
-  }
+if ( *(_QWORD *)&len[4] == user_serial && !strcmp(username, "Hacker") )               ---> username == "Hacker"
+----------------------------------------------------------------- Mã hóa RC4
+{
+*(_QWORD *)encrypted_string = 0x193536CC64F19FE1LL;
+*(_QWORD *)&encrypted_string[8] = 0x80FAE52F53E26D7LL;
+*(_QWORD *)&encrypted_string[16] = 0x53B98F7DFD87A294LL;
+*(_QWORD *)&encrypted_string[24] = 0x3C7F91A0516AF712LL;
+*(_QWORD *)&encrypted_string[30] = 0xC84F8FF01C3F3C7FLL;
+encrypted_length = strlen(encrypted_string);
+v50 = encrypted_length;
+v19 = alloca(16 * ((encrypted_length + 16) / 0x10));
+p_decrypted_string = (char (*)[])&dataa;
+RC4((char *)entered_serial, encrypted_string, (unsigned __int8 *)&dataa);
+-----------------------------------------------------------------
+v20 = gtk_label_get_type();
+v21 = g_type_check_instance_cast(result_label, v20);
+gtk_label_set_text(v21, p_decrypted_string);
+v22 = gtk_label_get_type();
+v23 = g_type_check_instance_cast(result_label, v22);
+gtk_label_set_selectable(v23, 1LL);
+v24 = gtk_label_get_type();
+v25 = g_type_check_instance_cast(result_label, v24);
+gtk_label_set_line_wrap(v25, 1LL);
+v52 = 0LL;
+v53 = 0x3FF0000000000000LL;
+v54 = 0LL;
+v55 = 0x3FF0000000000000LL;
+gtk_widget_override_color(result_label, 0LL, &v52);
+}
 ```
 
 Không như bài trước là sử dụng mã hoá xor đơn giản và kiểm tra `username` trước thì bài này lại sử dụng mã hoá [RC4](https://en.wikipedia.org/wiki/RC4) và kiểm tra `serial` và `username` cùng lúc. Sau khi nhập đúng `serial` và `username` thì nó thực hiện giải mã `encrypted_string` bằng mã hoá `RC4` với **key** là `entered_serial` cũng có nghĩa là `serial` của người dùng nhập vào và lưu ở `dataa`.
@@ -428,7 +630,7 @@ Bây giờ hãy vô gdb và đặt breakpoint tại `0x00005555555568ad <+669>: 
 
 > 0x00005555555568ad <+669>: cmp rax,QWORD PTR [rbp-0x80]
 
-Trong mã `assembly` trên thì `QWORD PTR [rbp-0x80]` là `serial` người dùng nhập vào còn `rax` là số serial để so sánh với `serial` người dùng nhập vào. Sử dụng lệnh `p/d $rax` để hiển thị số cần tìm. Việc còn lại là nhập số `serial` để lấy flag thôi!!
+Trong mã `assembly` trên thì `QWORD PTR [rbp-0x80]` là nơi lưu trữ số `serial` mà người dùng đã nhập vào, còn `rax` chứa số serial cần so sánh với số `serial` người dùng nhập. Sử dụng lệnh `p/d $rax` để hiển thị số `serial` cần tìm. Việc còn lại lad nhập `serial` để lấy flag thôi!!!
 
 ```shell
 $ gdb "revved-dist" --q
@@ -523,6 +725,8 @@ gef➤  p/d $rax
 $1 = 251302521774070
 ```
 
-![revved_img_1](/assets/images/posts/DDC/Tu-Ket/Rev/7a46cd46d7f59d282b9917c47917c905.png)
+![revved_img_1](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Rev/7a46cd46d7f59d282b9917c47917c905.png)
 
 > **FLAG: flag{388580f7bac0230a0407e7d13b5afa71}**
+
+Cảm ơn các bạn đã đọc bài viết của chúng mình. Vì lúc tụi mình giải có vài challenge quên lưu lại đề cộng với đây là lần đầu tụi mình làm blog với nhau nên sẽ còn thiếu sót. Tụi mình sẽ cố gắng hơn vào lần sau hehe :3
