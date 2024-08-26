@@ -733,4 +733,228 @@ $1 = 251302521774070
 
 > **FLAG: flag{388580f7bac0230a0407e7d13b5afa71}**
 
+# Cryptography
+
+> Hiện tại trong team vẫn còn đang khá thiếu người chơi mảng này nên phần này sẽ không nói đến các kỹ năng và lý thuyết chuyên sâu.
+
+## Independence
+
+Trong bài này ta sẽ được đưa cho một file [python](https://www.python.org/) chứa một hàm dùng để mã hoá (`encrypt`) và tạo ra `keygen` cùng với một file `out.txt` chứa văn bản đã mã hoá.
+
+```
+pub = (5464549774190809852923763408523051958716400587576327799474715226373287205246183801056700913652415087121976663782311766735601091617825037804761387911068511, 9581257592556018473305786754018994054986440370491067910997313283399579058244765977967617476919486211692103485121526918608638896652486174462300514168144287)
+out = [(7135801671058767584309500409714690782210907857769654167278686110915938179468272566599508349773575527751255945760666566561800878978873221420946365250158855, 8558667795367217630200789973869614923107151017456755231025099578562328753501118840162746538211725967983893568561332219610117111942140345185312896115801764), (9081654292092052593740926323443898739874089270155307973492015550364429244098275392340717306252957984398357583861032563833247926509557344976877672260459142, 10717987397890394333740060345095117642091105249224464088813273106704588906752870875186992219251592794333561984503545125421373446449869990855977041916951), (9360130297670218031610492994028720993482628709360198214243778793398751075670754237237922402499730710823475492707764648126386351366301670788376439590298316, 3120448508748906987556110369749886165580109830662081752474330489254010476308828119200925206094791905070939389455737293276178632192056309384694974096309458),
+...
+```
+
+```python
+from Crypto.Util.number import *
+
+FLAG = open('flag.txt', 'rb').read()
+
+def encrypt(m, pubkey, privkey):
+    g, p = pubkey
+    x, _ = privkey
+    h = pow(g, x, p)
+    C = []
+    while m:
+        y = getRandomRange(2, p)
+        c1 = pow(g, y, p)
+        y = (y<<1) | (m & 1)
+        c2 = pow(h, y, p)
+        C += [(c1, c2)]
+        m >>= 1
+    return C
+
+def keygen(nbits=512):
+    p = getStrongPrime(nbits)
+    g = getRandomRange(2, p)
+    x = getRandomRange(2, p)
+    pub = (g, p)
+    priv = (x, p)
+    return pub, priv
+
+pub, priv = keygen()
+m = bytes_to_long(FLAG)
+c = encrypt(m, pub, priv)
+
+with open('out.txt', 'w') as f:
+    f.write(f'{pub = }\n')
+    f.write(f'out = {str(c)}')
+
+```
+
+Hàm `encrypt` dựa và `pubkey` (**khoá chung**) và `privkey` (**khoá riêng tư**) để mã hoá `m` (**văn bản**).
+Sau khi dành vài tiếng đề mò trên **GG** và sự trợ giúp của **ChatGPT** thì mình phát hiện ra chương trình trên là [legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) và dưới đây là script lấy flag.
+
+> **Cài đặt thư viện cần thiết**
+> pip install sympy
+> pip install pycryptodome
+
+```python
+from Crypto.Util.number import *
+from sympy.ntheory import legendre_symbol
+
+# Đọc thông tin từ pubkey và ciphertext
+p = 9581257592556018473305786754018994054986440370491067910997313283399579058244765977967617476919486211692103485121526918608638896652486174462300514168144287
+g = 5464549774190809852923763408523051958716400587576327799474715226373287205246183801056700913652415087121976663782311766735601091617825037804761387911068511
+
+out = [
+    ... # thay trong out.txt
+]
+
+m_bits = []
+
+# Khôi phục từng bit của thông điệp
+for c1, c2 in out:
+    # Tính g^2x mod p
+    g2x = pow(c1, 2, p)
+    # Tính Legendre symbol
+    legendre = legendre_symbol(c2, p)
+
+    # Nếu Legendre symbol là 1, thì bit là 0; ngược lại là 1
+    if legendre == 1:
+        m_bits.append(0)
+    else:
+        m_bits.append(1)
+
+# Xây dựng lại m từ các bit
+m = 0
+for bit in reversed(m_bits):
+    m = (m << 1) | bit
+
+# Chuyển đổi m thành chuỗi flag
+flag = long_to_bytes(m)
+print(flag.decode('utf-8'))
+```
+
+> **FLAG: flag{f6b7b38f75cab050b57b2bf2a2b92bef}**
+
+## MenofCulture
+
+> Đây là chall lỏ nhất trong giải này vì lúc đầu BTC chỉ cho mỗi file đã được mã hoá cùng với một file `pub` và mãi đến khi cần cuối mới quăng source ra một cách rất phong cách :))
+
+Nhìn qua file `pub.pem` thì có thể biết rằng đây là [RSA](<https://vi.wikipedia.org/wiki/RSA_(m%C3%A3_h%C3%B3a)>)
+
+```
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDnthVx5zkZF+UEva8CWMjFFK/d
+gF7zEZooTUWRbM3MfRDdLIXal9W8PhJpT8RnPfeJGAtA4PVuUfDbw/23+j5fFpTH
+18W1Oa7PEa7YCJVdrjpG2ef7TXwGmpSXkUqTx8zhDu7Hw9biXSxBiGvZApTOSLeX
+IgHSiEIUbKu43RsCiQIDAQAB
+-----END PUBLIC KEY-----
+```
+
+Bây giờ hãy dùng `python` hoặc `SSH` để coi trong đây có gì nào!!!
+
+Ở đây mình dùng python
+
+```python
+from Crypto.PublicKey import RSA
+
+# Đọc khóa công khai từ file
+with open("pub.pem", "r") as f:
+    key = RSA.import_key(f.read())
+
+n = key.n
+e = key.e
+print(f"n = {n}\ne = {e}")
+```
+
+Sau đó ta sẽ thu được kết quả như sau:
+
+```
+n = 162713183540670273925360771290754389689114786355448853241093028636518592961121037232646775711743110514409738823813415192804425847227123676570595264815143540806320729587612450134959312352754888089223236634317216147289460381334931873855694863560717350586193771526660796357658134609347867121461366800623337144969
+e = 65537
+```
+
+Bây giờ hãy cùng file mã hoá có gì nào.
+
+```python
+from Crypto.Util.number import *
+from Crypto.PublicKey.RSA import construct
+from Crypto.Random.random import randrange
+
+
+def next_prime(x):
+    while not isPrime(x):
+        x += 1
+    return x
+
+
+def keygen(nbits, e=0x10001):
+    p = getPrime(nbits // 2)
+    pbits = p.bit_length()
+    r = randrange(2, pbits)
+    mask = 2**(pbits-r-1)
+    base = p ^ mask
+    q = next_prime(base)
+    n = p * q
+    priv = (p, q, e)
+    pub = (n, e)
+    return priv, pub
+
+
+def encrypt(msg, pub):
+    n, e = pub
+    m = bytes_to_long(msg)
+    c = pow(m, e, n)
+    return long_to_bytes(c)
+
+
+if __name__ == "__main__":
+
+    FLAG = open("flag.txt", "rb").read()
+    priv, pub = keygen(1024)
+    ct = encrypt(FLAG, pub)
+
+    open("flag.txt.enc", "wb").write(ct)
+
+    pubkey = construct(pub).export_key()
+    open("pub.pem", "wb").write(pubkey)
+```
+
+Sau một vài tiếng lo lắng rớt top trong bất lực vì không biết làm thì một senpai đã xuất hiện và giúp đỡ mình. Và mình và team cũng cảm ơn senpai đó rất nhiều vì đã giúp team mình clear <3
+
+Và đây là script giải quyết!!!
+
+> pip install gmpy2
+
+```python
+from Crypto.Util.number import long_to_bytes, bytes_to_long
+from gmpy2 import iroot
+
+n = ... # Thay ở trên
+with open("flag.txt.enc", "rb") as file:
+    c = bytes_to_long(file.read())
+e = ... # Thay ở trên
+
+"""
+Tìm r và k
+for r in range(2, 512):
+    for k in range(1024):
+        b1, b2 = 2 ** r + k, -2**r + k
+        delta1, delta2 = b1 ** 2 + 4 * n, b2 ** 2 + 4 * n
+        if iroot(delta1, 2)[1]:
+            print(f'1 {r = } {k = } ')
+        if iroot(delta2, 2)[1]:
+            print(f'2 {r = } {k = } ')
+  """
+r = 483
+k = 576
+b2 = -2**r + k
+delta2 = b2 ** 2 + 4 * n
+p = (-b2 + iroot(delta2, 2)[0]) // 2
+q = n // p
+# print(n % p)
+# print(n % q)
+d = pow(e, -1, (p - 1) * (q - 1))
+m = pow(int(c), d, n)
+print(long_to_bytes(int(m)))
+    # p = x
+    # q = x*(x +- 2^r + k) = x^2 + x(+-2^r + k) - n
+```
+
+> **flag{81c519414f1802e646ba744a512f7408}**
+
 Cảm ơn các bạn đã đọc bài viết của chúng mình. Vì lúc tụi mình giải có vài challenge quên lưu lại đề cộng với đây là lần đầu tụi mình làm blog với nhau nên sẽ còn thiếu sót. Tụi mình sẽ cố gắng hơn vào lần sau hehe :3
