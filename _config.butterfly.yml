@@ -183,7 +183,7 @@ index_post_content:
 # anchor
 anchor:
   # when you scroll, the URL will update according to header id.
-  auto_update: false
+  auto_update: true
   # Click the headline to scroll and update the anchor
   click_to_scroll: true
 
@@ -241,9 +241,9 @@ post_edit:
 related_post:
   enable: true
   limit: 6 # Number of posts displayed
-  date_type: created # or created or updated 文章日期顯示創建日或者更新日
+  date_type: created # or created or updated
 
-# post_pagination (分頁)
+# post_pagination
 # value: 1 || 2 || false
 # 1: The 'next post' will link to old post
 # 2: The 'next post' will link to new post
@@ -350,7 +350,7 @@ newest_comments:
 # Bottom right button
 # --------------------------------------
 
-# Conversion between Traditional and Simplified Chinese (簡繁轉換)
+# Conversion between Traditional and Simplified Chinese
 translate:
   enable: false
   # The text of a button
@@ -395,9 +395,8 @@ rightside_item_order:
 # Math
 # --------------------------------------
 # About the per_page
-# if you set it to true, it will load mathjax/katex script in each page (true 表示每一頁都加載js)
+# if you set it to true, it will load mathjax/katex script in each page
 # if you set it to false, it will load mathjax/katex script according to your setting (add the 'mathjax: true' in page's front-matter)
-# (false 需要時加載，須在使用的 Markdown Front-matter 加上 mathjax: true)
 
 # MathJax
 mathjax:
@@ -422,13 +421,13 @@ algolia_search:
 
 # Local search
 local_search:
-  enable: false
+  enable: true
   # Preload the search data when the page loads.
   preload: false
   # Show top n results per article, show all results by setting to -1
   top_n_per_article: 1
   # Unescape html strings to the readable one.
-  unescape: false
+  unescape: true
   CDN:
 
 # Docsearch
@@ -475,14 +474,13 @@ disqus:
   apikey: # For newest comments widget
 
 # Alternative Disqus - Render comments with Disqus API
-# DisqusJS 評論系統，可以實現在網路審查地區載入 Disqus 評論列表，兼容原版
 # https://github.com/SukkaW/DisqusJS
 disqusjs:
   shortname:
   apikey:
   option:
 
-# livere (來必力)
+# livere
 # https://www.livere.com/
 livere:
   uid:

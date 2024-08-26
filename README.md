@@ -45,12 +45,19 @@ hexo new <new_post_name>
 ```
 
 > The new post will be located at `/source/_posts`
+
 > You should save your images, videos or scripts at `/source/assets`. For example: `/source/assets/images/posts/testctf-writeup/a.png`
 
 If you want to see how your post looks like on blog, just need to run this following command:
 
 ```sh
 hexo s
+```
+
+or this:
+
+```sh
+hexo server
 ```
 
 Then visit `http://localhost:4000` to view that post!
@@ -78,9 +85,13 @@ git push
 
 **This is an important part**
 
-On [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io), click **Pull Requests**
+1. On [our repository](https://github.com/3r0th3r-CC/3r0th3r-CC.github.io), click on **Pull Requests**
 
-Then ask the **admin** for more, I'm lazy now :)
+2. Next, click on **New pull request** and select the branch you want to merge with the **master** branch
+
+3. After creating the pull request, if there are no conflicts, merge your branch with the **master** branch and then delete it
+
+> In case any conflict arises, ask the **admin** and he will definitely resolve it for you :)
 
 ## :recycle: Update
 
