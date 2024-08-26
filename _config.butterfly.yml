@@ -88,6 +88,63 @@ cover:
   # When cover is not set, the default cover is displayed
   default_cover:
     - /assets/images/thumb/thumb_1.png
+    - /assets/images/thumb/thumb_2.png
+    - /assets/images/thumb/thumb_3.png
+    - /assets/images/thumb/thumb_4.png
+    - /assets/images/thumb/thumb_5.png
+    - /assets/images/thumb/thumb_6.png
+    - /assets/images/thumb/thumb_7.png
+    - /assets/images/thumb/thumb_8.png
+    - /assets/images/thumb/thumb_9.png
+    - /assets/images/thumb/thumb_10.png
+    - /assets/images/thumb/thumb_11.png
+    - /assets/images/thumb/thumb_12.png
+    - /assets/images/thumb/thumb_13.png
+    - /assets/images/thumb/thumb_14.png
+    - /assets/images/thumb/thumb_15.png
+    - /assets/images/thumb/thumb_16.png
+    - /assets/images/thumb/thumb_17.png
+    - /assets/images/thumb/thumb_18.png
+    - /assets/images/thumb/thumb_19.png
+    - /assets/images/thumb/thumb_20.png
+    - /assets/images/thumb/thumb_21.png
+    - /assets/images/thumb/thumb_22.png
+    - /assets/images/thumb/thumb_23.png
+    - /assets/images/thumb/thumb_24.png
+    - /assets/images/thumb/thumb_25.png
+    - /assets/images/thumb/thumb_26.png
+    - /assets/images/thumb/thumb_27.png
+    - /assets/images/thumb/thumb_28.png
+    - /assets/images/thumb/thumb_29.png
+    - /assets/images/thumb/thumb_30.png
+    - /assets/images/thumb/thumb_31.png
+    - /assets/images/thumb/thumb_32.png
+    - /assets/images/thumb/thumb_33.png
+    - /assets/images/thumb/thumb_34.png
+    - /assets/images/thumb/thumb_35.png
+    - /assets/images/thumb/thumb_36.png
+    - /assets/images/thumb/thumb_37.png
+    - /assets/images/thumb/thumb_38.png
+    - /assets/images/thumb/thumb_39.png
+    - /assets/images/thumb/thumb_40.png
+    - /assets/images/thumb/thumb_41.png
+    - /assets/images/thumb/thumb_42.png
+    - /assets/images/thumb/thumb_43.png
+    - /assets/images/thumb/thumb_44.png
+    - /assets/images/thumb/thumb_45.png
+    - /assets/images/thumb/thumb_46.png
+    - /assets/images/thumb/thumb_47.png
+    - /assets/images/thumb/thumb_48.png
+    - /assets/images/thumb/thumb_49.png
+    - /assets/images/thumb/thumb_50.png
+    - /assets/images/thumb/thumb_51.png
+    - /assets/images/thumb/thumb_52.png
+    - /assets/images/thumb/thumb_53.png
+    - /assets/images/thumb/thumb_54.png
+    - /assets/images/thumb/thumb_55.png
+    - /assets/images/thumb/thumb_56.png
+    - /assets/images/thumb/thumb_57.png
+    - /assets/images/thumb/thumb_58.png
 
 # Replace Broken Images
 error_img:
