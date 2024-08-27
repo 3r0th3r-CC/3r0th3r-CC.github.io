@@ -294,7 +294,7 @@ http://2xyr7jug4b5uhndzelsf7vgrxygttutc6h5mqzpwp7y6blk6owhxliqd.onion/preventpat
 
 Done :b
 
-# Boot2Root & Net
+# Boot2Root & Network
 
 2 challs này cơ bản là giống nhau vì đề có lỗ hổng... (chắc vậy idk :v)
 
@@ -633,7 +633,7 @@ Bây giờ hãy vô gdb và đặt breakpoint tại `0x00005555555568ad <+669>: 
 
 > 0x00005555555568ad <+669>: cmp rax,QWORD PTR [rbp-0x80]
 
-Trong mã `assembly` trên thì `QWORD PTR [rbp-0x80]` là nơi lưu trữ số `serial` mà người dùng đã nhập vào, còn `rax` chứa số serial cần so sánh với số `serial` người dùng nhập. Sử dụng lệnh `p/d $rax` để hiển thị số `serial` cần tìm. Việc còn lại lad nhập `serial` để lấy flag thôi!!!
+Trong mã `assembly` trên thì `QWORD PTR [rbp-0x80]` là nơi lưu trữ số `serial` mà người dùng đã nhập vào, còn `rax` chứa số serial cần so sánh với số `serial` người dùng nhập. Sử dụng lệnh `p/d $rax` để hiển thị số `serial` cần tìm. Việc còn lại là nhập `serial` để lấy flag thôi!!!
 
 ```shell
 $ gdb "revved-dist" --q
