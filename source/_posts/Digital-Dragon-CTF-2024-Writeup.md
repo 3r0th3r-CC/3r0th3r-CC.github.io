@@ -968,7 +968,7 @@ print(long_to_bytes(int(m)))
 
 ## SuperSteg
 
-Tải đề về thì hiện nhiện ta sẽ thấy nó giống 1 mã QR
+Tải đề về thì hiển nhiên ta sẽ thấy nó giống 1 mã QR
 
 ![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/steg1.png)
 
