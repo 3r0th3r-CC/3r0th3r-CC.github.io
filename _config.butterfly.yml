@@ -460,7 +460,7 @@ addtoany:
 comments:
   # Up to two comments system, the first will be shown as default
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
-  use: Giscus # Valine,Disqus
+  use: Utterances # Utterances,Giscus
   text: true # Display the comment name next to the button
   # lazyload: The comment system will be load when comment element enters the browser's viewport.
   # If you set it to true, the comment count will be invalid
@@ -518,9 +518,9 @@ waline:
 # utterances
 # https://utteranc.es/
 utterances:
-  repo:
+  repo: 3r0th3r-CC/3r0th3r-cc.github.io
   # Issue Mapping: pathname/url/title/og:title
-  issue_term: pathname
+  issue_term: og:title
   # Theme: github-light/github-dark/github-dark-orange/icy-dark/dark-blue/photon-dark
   light_theme: github-light
   dark_theme: photon-dark
@@ -662,7 +662,7 @@ site_verification:
 
 theme_color:
   enable: true
-  main: "#1C1C1E"
+  main: "#414a4c" #1C1C1E
 #   paginator: "#00c4b6"
 #   button_hover: "#FF7242"
 #   text_selection: "#00c4b6"
@@ -679,19 +679,19 @@ theme_color:
 #   meta_theme_color_dark: "#0d0d0d"
 
 # The top_img settings of home page
-# default: top img - full screen, site info - middle (默認top_img全屏，site_info在中間)
-# The position of site info, eg: 300px/300em/300rem/10% (主頁標題距離頂部距離)
+# default: top img - full screen, site info - middle
+# The position of site info, eg: 300px/300em/300rem/10%
 index_site_info_top:
-# The height of top_img, eg: 300px/300em/300rem (主頁top_img高度)
+# The height of top_img, eg: 300px/300em/300rem
 index_top_img_height:
 
-# The user interface setting of category and tag page (category和tag頁的UI設置)
-# index - same as Homepage UI (index 值代表 UI將與首頁的UI一樣)
-# default - same as archives UI 默認跟archives頁面UI一樣
-category_ui: # 留空或 index
-tag_ui: # 留空或 index
+# The user interface setting of category and tag page
+# index - same as Homepage UI
+# default - same as archives UI
+category_ui: # index
+tag_ui: # index
 
-# Stretches the lines so that each line has equal width（文字向兩側對齊，對最後一行無效）
+# Stretches the lines so that each line has equal width
 text_align_justify: false
 
 # Website Background
@@ -707,7 +707,7 @@ mask:
   header: true
   footer: true
 
-# the position of bottom right button/default unit: px (右下角按鈕距離底部的距離/默認單位為px)
+# the position of bottom right button/default unit: px
 rightside_bottom:
 
 # Enter transitions
