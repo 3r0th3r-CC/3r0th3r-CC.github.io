@@ -784,7 +784,7 @@ with open('out.txt', 'w') as f:
 ```
 
 Hàm `encrypt` dựa và `pubkey` (**khoá chung**) và `privkey` (**khoá riêng tư**) để mã hoá `m` (**văn bản**)
-Sau khi dành vài tiếng đề mò trên **Google** và sự trợ giúp của **ChatGPT** thì mình phát hiện ra chương trình trên là [legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) và dưới đây là script lấy flag:
+Sau khi dành vài tiếng để mò trên **Google** và sự trợ giúp của **ChatGPT** thì mình phát hiện ra chương trình trên là [legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) và dưới đây là script lấy flag:
 
 > **Cài đặt thư viện cần thiết**
 
@@ -833,7 +833,7 @@ print(flag.decode('utf-8'))
 
 ## MenofCulture
 
-> Đây là chall lỏ nhất trong giải này vì lúc đầu BTC chỉ cho mỗi file đã được mã hoá cùng với một file `pub` và mãi đến khi cần cuối mới quăng source ra một cách rất phong cách :)))
+> Đây là chall lỏ nhất trong giải này vì lúc đầu BTC chỉ cho mỗi file đã được mã hoá cùng với một file `pub` và mãi đến khi gần cuối mới quăng source ra một cách rất phong cách :)))
 
 Nhìn qua file `pub.pem` thì có thể biết rằng đây là [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem))
 
@@ -915,7 +915,7 @@ if __name__ == "__main__":
     open("pub.pem", "wb").write(pubkey)
 ```
 
-Tới đây thì tụi mình bị ngơ và không biết nên đi tiếp tiếp như nào
+Tới đây thì tụi mình bị ngơ và không biết nên đi tiếp như nào
 
 Sau một vài tiếng lo lắng rớt top trong sự bất lực thì một senpai đã xuất hiện và giúp đỡ tụi mình. Và mình và team cũng cảm ơn senpai đó rất nhiều vì đã giúp team mình giải được chall này <3
 
