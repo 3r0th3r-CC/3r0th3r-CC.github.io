@@ -4,6 +4,12 @@
 
 :book: Theme Docs: [English](https://butterfly.js.org/en/posts/butterfly-docs-en-get-started/)
 
+## :closed_book: Latest Blog Posts
+
+<!-- Fetch-Blog-Post:Start -->
+
+<!-- Fetch-Blog-Post:End -->
+
 ## :computer: Installation
 
 ### GIT
