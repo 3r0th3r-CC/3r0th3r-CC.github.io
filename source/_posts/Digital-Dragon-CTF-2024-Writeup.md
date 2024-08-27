@@ -313,7 +313,9 @@ Sau khi `Extract` vào trong tệp đó sẽ thấy các tệp đã nói trên, 
 
 ![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/net1.png)
 
-# Phissing
+# Phishing
+
+## Phishing2 
 
 Đưa `url` lên [VirusTotal](https://www.virustotal.com/gui/home/upload) để check
 
@@ -961,5 +963,95 @@ print(long_to_bytes(int(m)))
 ```
 
 > **FLAG: flag{81c519414f1802e646ba744a512f7408}**
+
+# Steganography
+
+## SuperSteg
+
+Tải đề về thì hiện nhiện ta sẽ thấy nó giống 1 mã QR
+
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/steg1.png)
+
+``` python
+import numpy as np
+from PIL import Image
+
+def txt_to_image(filename, width, height):
+    with open(filename, 'r') as f:
+        data = f.read()
+
+    image_data = np.zeros((height, width), dtype=np.uint8)
+    for i in range(height):
+        for j in range(width):
+            index = i * width + j
+            if index >= len(data):
+                image_data[i, j] = 0
+            else:
+                if data[index] == ' ':
+                    image_data[i, j] = 0
+                elif data[index] in ('$', '&', '%'):
+                    image_data[i, j] = 255
+    img = Image.fromarray(image_data, 'L')
+    img.save('output.png')
+
+
+filename = '/home/zs0b/Downloads/supersteg.txt'
+width = 75
+height = 38
+txt_to_image(filename, width, height)
+
+```
+Mục đích của đoạn code trên là chuyển các ký tự `$, & ,%` thành màu pixel màu trắng
+
+```python
+import numpy as np
+from PIL import Image
+```
+
+`numpy` tạo mảng 2 chiều để lưu trữ dữ liệu 
+
+import`Image` từ `PIL (Pillow)` dùng để tạo và lưu ảnh từ ma trận pixel
+
+```python
+def txt_to_image(filename, width, height):
+```
+
+Khai báo
+
+```python
+with open(filename, 'r') as f:
+        data = f.read()
+```
+
+Đoạn này sẽ mở file ở chế độ đọc `r`, đọc toàn bộ dữ liệu vào biến `data`
+
+```python
+image_data = np.zeros((height, width), dtype=np.uint8)
+```
+
+Tạo mảng `numpy` 2 chiều với kích thước `height, width`, số `0 (màu đen)`
+
+```python 
+for i in range(height):
+        for j in range(width):
+            index = i * width + j
+            if index >= len(data):
+                image_data[i, j] = 0
+            else:
+                if data[index] == ' ':
+                    image_data[i, j] = 0
+                elif data[index] in ('$', '&', '%'):
+                    image_data[i, j] = 255
+```
+
+Duyệt qua từng hàng và cột của mảng
+
+`index` sẽ tính toán vị trí ký tự trong chuỗi `data`
+
+Nếu `index` vượt quá chiều dài của chuỗi `data` sẽ đặt pixel đó thành `0 (màu đen)` 
+
+Ngược lại, `index` là khoảng trắng đặt pixel thành `0 (màu đen)`, nếu có ký tự `$, &, %` sẽ đặt pixel thành `255 (màu trắng)`
+
+![image](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/Forensic/steg2.png)
 
 Cảm ơn các bạn đã đọc bài viết của chúng mình. Vì lúc tụi mình giải có vài challenge quên lưu lại đề cộng với đây là lần đầu tụi mình làm blog với nhau nên sẽ còn thiếu sót. Tụi mình sẽ cố gắng hơn vào lần sau hehe :3
