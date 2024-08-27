@@ -734,11 +734,11 @@ $1 = 251302521774070
 
 # Cryptography
 
-> Hiện tại trong team vẫn còn đang khá thiếu người chơi mảng này nên phần này sẽ không nói đến các kỹ năng và lý thuyết chuyên sâu.
+> Hiện tại trong team vẫn còn đang khá thiếu người chơi mảng này nên phần này tụi mình sẽ không nói đến các kỹ năng và lý thuyết chuyên sâu nhé :3
 
 ## Independence
 
-Trong bài này ta sẽ được đưa cho một file [python](https://www.python.org/) chứa một hàm dùng để mã hoá (`encrypt`) và tạo ra `keygen` cùng với một file `out.txt` chứa văn bản đã mã hoá.
+Trong bài này ta sẽ được đưa cho một file **Python** chứa một hàm dùng để mã hoá (`encrypt`) và tạo ra `keygen` cùng với một file `out.txt` chứa văn bản đã mã hoá
 
 ```
 pub = (5464549774190809852923763408523051958716400587576327799474715226373287205246183801056700913652415087121976663782311766735601091617825037804761387911068511, 9581257592556018473305786754018994054986440370491067910997313283399579058244765977967617476919486211692103485121526918608638896652486174462300514168144287)
@@ -783,12 +783,14 @@ with open('out.txt', 'w') as f:
 
 ```
 
-Hàm `encrypt` dựa và `pubkey` (**khoá chung**) và `privkey` (**khoá riêng tư**) để mã hoá `m` (**văn bản**).
-Sau khi dành vài tiếng đề mò trên **GG** và sự trợ giúp của **ChatGPT** thì mình phát hiện ra chương trình trên là [legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) và dưới đây là script lấy flag.
+Hàm `encrypt` dựa và `pubkey` (**khoá chung**) và `privkey` (**khoá riêng tư**) để mã hoá `m` (**văn bản**)
+Sau khi dành vài tiếng đề mò trên **Google** và sự trợ giúp của **ChatGPT** thì mình phát hiện ra chương trình trên là [legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) và dưới đây là script lấy flag:
 
 > **Cài đặt thư viện cần thiết**
-> pip install sympy
-> pip install pycryptodome
+
+```shell
+pip install sympy pycryptodome
+```
 
 ```python
 from Crypto.Util.number import *
@@ -831,9 +833,9 @@ print(flag.decode('utf-8'))
 
 ## MenofCulture
 
-> Đây là chall lỏ nhất trong giải này vì lúc đầu BTC chỉ cho mỗi file đã được mã hoá cùng với một file `pub` và mãi đến khi cần cuối mới quăng source ra một cách rất phong cách :))
+> Đây là chall lỏ nhất trong giải này vì lúc đầu BTC chỉ cho mỗi file đã được mã hoá cùng với một file `pub` và mãi đến khi cần cuối mới quăng source ra một cách rất phong cách :)))
 
-Nhìn qua file `pub.pem` thì có thể biết rằng đây là [RSA](<https://vi.wikipedia.org/wiki/RSA_(m%C3%A3_h%C3%B3a)>)
+Nhìn qua file `pub.pem` thì có thể biết rằng đây là [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem))
 
 ```
 -----BEGIN PUBLIC KEY-----
@@ -846,7 +848,7 @@ IgHSiEIUbKu43RsCiQIDAQAB
 
 Bây giờ hãy dùng `python` hoặc `SSH` để coi trong đây có gì nào!!!
 
-Ở đây mình dùng python
+Ở đây mình dùng **Python**
 
 ```python
 from Crypto.PublicKey import RSA
@@ -867,7 +869,7 @@ n = 1627131835406702739253607712907543896891147863554488532410930286365185929611
 e = 65537
 ```
 
-Bây giờ hãy cùng file mã hoá có gì nào.
+Bây giờ hãy cùng xem file mã hoá có gì nào~
 
 ```python
 from Crypto.Util.number import *
@@ -913,11 +915,15 @@ if __name__ == "__main__":
     open("pub.pem", "wb").write(pubkey)
 ```
 
-Sau một vài tiếng lo lắng rớt top trong bất lực vì không biết làm thì một senpai đã xuất hiện và giúp đỡ mình. Và mình và team cũng cảm ơn senpai đó rất nhiều vì đã giúp team mình clear <3
+Tới đây thì tụi mình bị ngơ và không biết nên đi tiếp tiếp như nào
 
-Và đây là script giải quyết!!!
+Sau một vài tiếng lo lắng rớt top trong sự bất lực thì một senpai đã xuất hiện và giúp đỡ tụi mình. Và mình và team cũng cảm ơn senpai đó rất nhiều vì đã giúp team mình giải được chall này <3
 
-> pip install gmpy2
+Và đây là script giải bài đó!!!
+
+```shell
+pip install gmpy2
+```
 
 ```python
 from Crypto.Util.number import long_to_bytes, bytes_to_long
@@ -954,6 +960,6 @@ print(long_to_bytes(int(m)))
     # q = x*(x +- 2^r + k) = x^2 + x(+-2^r + k) - n
 ```
 
-> **flag{81c519414f1802e646ba744a512f7408}**
+> **FLAG: flag{81c519414f1802e646ba744a512f7408}**
 
 Cảm ơn các bạn đã đọc bài viết của chúng mình. Vì lúc tụi mình giải có vài challenge quên lưu lại đề cộng với đây là lần đầu tụi mình làm blog với nhau nên sẽ còn thiếu sót. Tụi mình sẽ cố gắng hơn vào lần sau hehe :3
