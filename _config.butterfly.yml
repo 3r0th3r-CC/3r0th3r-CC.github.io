@@ -751,8 +751,8 @@ canvas_nest:
 
 # Mouse click effects: fireworks
 fireworks:
-  enable: false
-  zIndex: 9999 # -1 or 9999
+  enable: true
+  zIndex: -1 # -1 or 9999
   mobile: false
 
 # Mouse click effects: Heart symbol
@@ -901,8 +901,8 @@ pjax:
 
 # Inject the css and script (aplayer/meting)
 aplayerInject:
-  enable: false
-  per_page: false
+  enable: true
+  per_page: true
 
 # Snackbar (Toast Notification)
 # https://github.com/polonel/SnackBar
@@ -965,11 +965,11 @@ inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
   bottom:
-    # - <script src="xxxx"></script>
+    # - <script src="/assets/js/fairyDustCursor.js"></script>
+    - <meting-js server="netease" type="playlist" id="3204190542" order="random" fixed="true"></meting-js>
 
 # CDN
 # Don't modify the following settings unless you know how they work
-# 非必要請不要修改
 CDN:
   # The CDN provider of internal scripts
   # option: local/jsdelivr/unpkg/cdnjs/custom
@@ -993,8 +993,8 @@ CDN:
     # activate_power_mode:
     # algolia_js:
     # algolia_search:
-    # aplayer_css:
-    # aplayer_js:
+    aplayer_css: /assets/css/APlayer.min.css
+    aplayer_js: /assets/js/APlayer.min.js
     # artalk_css:
     # artalk_js:
     # blueimp_md5:
@@ -1011,7 +1011,7 @@ CDN:
     # egjs_infinitegrid:
     # fancybox:
     # fancybox_css:
-    # fireworks:
+    fireworks: /assets/js/fireWorks.js
     # fontawesome:
     # gitalk:
     # gitalk_css:
@@ -1027,7 +1027,7 @@ CDN:
     # mathjax:
     # medium_zoom:
     # mermaid:
-    # meting_js:
+    meting_js: /assets/js/Meting.min.js
     # pangu:
     # prismjs_autoloader:
     # prismjs_js:
