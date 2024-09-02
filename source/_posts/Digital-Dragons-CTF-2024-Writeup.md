@@ -1,5 +1,5 @@
 ---
-title: Digital Dragon CTF 2024 Writeup
+title: Digital Dragons CTF 2024 Writeup
 description: "CTF Digital Dragons: The Cybersecurity Challenge 2024 là cuộc thi do Trường Đại học Công nghệ Thông tin & Truyền thông Việt - Hàn (VKU) tổ chức"
 cover: >-
   https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/thumb.png
@@ -19,7 +19,7 @@ comments: true
 date: 2024-08-26 03:25:00
 ---
 
-Hi, tụi mình là team **3r0th3r CC**. Đợt vừa rồi team mình đã đứng **hạng 17** vòng **Tứ Kết** của cuộc thi **Digital Dragon CTF** và cũng clear được hết tất cả challenge
+Hi, tụi mình là team **3r0th3r CC**. Đợt vừa rồi team mình đã đứng **hạng 17** vòng **Tứ Kết** của cuộc thi **Digital Dragons CTF** và cũng clear được hết tất cả challenge
 
 ![17th](https://raw.githubusercontent.com/3r0th3r-CC/3r0th3r-CC.github.io/master/source/assets/images/posts/DDC-2024/Tu-Ket/17th.png)
 
@@ -315,7 +315,7 @@ Sau khi `Extract` vào trong tệp đó sẽ thấy các tệp đã nói trên, 
 
 # Phishing
 
-## Phishing2 
+## Phishing2
 
 Đưa `url` lên [VirusTotal](https://www.virustotal.com/gui/home/upload) để check
 
@@ -338,6 +338,8 @@ $telegramID = "12345678";   //PUT YOUR ID HERE!!!
 ```
 
 # OSINT
+
+## ddcScapeG0at24
 
 Đầu tiên, challenge cho ta 1 cái username `ddcScapeG0at24`. Sử dụng tool [instantusername](https://instantusername.com) hoặc 1 số tool như `sherlock`, ta sẽ tìm được tài khoản [GitHub](https://github.com/ddcScapeG0at24/)
 
