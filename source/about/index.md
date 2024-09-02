@@ -15,4 +15,6 @@ We are _CTF_ and _Security Research_ Team. はじめまして!
   Your browser does not support the audio element :(
 </audio>
 
+After playing intense CTF challenges, let's unwind with these soothing tunes. 楽しむ~
+
 <meting-js server="netease" type="playlist" id="3204190542" order="random"></meting-js>
