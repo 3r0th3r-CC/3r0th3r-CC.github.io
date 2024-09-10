@@ -1,8 +1,11 @@
 nav#nav
   span#blog-info
     a(href=url_for('/') title=config.title)
-      if theme.nav.logo
-        img.site-icon(src=url_for(theme.nav.logo))
+      img#site-logo.site-icon(
+        src=url_for(theme.nav.logo.split(',')[0]),
+        data-light=url_for(theme.nav.logo.split(',')[0]),
+        data-dark=url_for(theme.nav.logo.split(',')[1])
+      )
       if theme.nav.display_title
         span.site-name=config.title
     
