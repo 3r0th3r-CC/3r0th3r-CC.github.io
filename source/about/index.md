@@ -10,7 +10,12 @@ comments: false
 
 We are _CTF_ and _Security Research_ Team. はじめまして!
 
-<audio controls>
+<video controls loop="loop" style="width: 100%;">
+  <source src="/assets/videos/vid_2.mp4" type="video/mp4">
+  Your browser does not support the video tag :((
+</video>
+
+<audio controls loop="loop">
   <source src="/assets/audio/web/audio_1.wav" type="audio/wav">
   Your browser does not support the audio element :(
 </audio>

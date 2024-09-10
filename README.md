@@ -112,3 +112,14 @@ Then `fetch` and `pull` all changes from the remote repository:
 ```sh
 git fetch && git pull
 ```
+
+Now you are up to date!
+
+### Some Links For Maintenance
+
+- Install NodeJS: https://nodejs.org/en/download/package-manager/all
+- Convert Image to Favicon: https://favicon.io/favicon-converter/
+- GitHub Markdown: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+- Basic HTML: https://www.w3schools.com/html/default.asp
+- Basic CSS: https://www.w3schools.com/css/default.asp
+- Basic JavaScript: https://www.w3schools.com/Js/default.asp

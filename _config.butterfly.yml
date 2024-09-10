@@ -2,7 +2,7 @@
 # --------------------------------------
 
 nav:
-  logo: /assets/images/logo/Logo.png # image
+  logo: /assets/images/logo/new/png/logo-white-not-bg.png # image
   display_title: true
   fixed: true # fixed navigation bar
 
@@ -45,7 +45,7 @@ favicon: /assets/pwa/favicon.ico
 
 # Avatar
 avatar:
-  img: /assets/images/logo/Logo.png
+  img: /assets/images/logo/new/gif/logo-ani.gif
   effect: false
 
 # Disable all banner image
