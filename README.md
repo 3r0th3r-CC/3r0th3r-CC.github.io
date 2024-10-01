@@ -7,7 +7,7 @@
 ## :closed_book: Latest Blog Posts
 
 <!-- Fetch-Blog-Post:Start -->
-- [Digital Dragon CTF 2024 Writeup](https://3r0th3r-cc.github.io/2024/08/25/Digital-Dragon-CTF-2024-Writeup/)
+- [Digital Dragons CTF 2024 Writeup](https://3r0th3r-cc.github.io/2024/08/25/Digital-Dragons-CTF-2024-Writeup/)
 <!-- Fetch-Blog-Post:End -->
 
 ## :computer: Installation
